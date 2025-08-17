@@ -323,12 +323,14 @@
     </section>
 
     <script>
-        // Cruise database with real cruise lines
+        // Cruise database with detailed ship information
         const cruiseDatabase = [
             {
                 name: "Caribbean Paradise",
                 ship: "Symphony of the Seas",
                 cruiseLine: "Royal Caribbean",
+                shipClass: "Oasis Class",
+                yearBuilt: 2018,
                 duration: "7 Nights",
                 embarkation: "Miami",
                 ports: ["Nassau", "St. Thomas", "St. John", "CocoCay"],
@@ -336,12 +338,18 @@
                 rating: 4.6,
                 cabinTypes: ["Interior", "Ocean View", "Balcony", "Suite"],
                 image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=250&fit=crop",
-                destination: "Caribbean"
+                destination: "Caribbean",
+                activities: ["FlowRider Surf Simulator", "Rock Climbing Wall", "Zip Line", "Mini Golf", "Basketball Court", "Ice Skating Rink"],
+                dining: ["Main Dining Room", "Windjammer Marketplace", "Chops Grille", "Giovanni's Table", "Sushi Bar", "Johnny Rockets"],
+                bars: ["Bionic Bar", "Sky Bar", "Pool Bar", "Schooner Bar", "Diamond Club", "Vintages Wine Bar"],
+                highlights: ["Central Park with 20,000+ plants", "AquaTheater with high-diving shows", "Boardwalk Carousel", "Ultimate Abyss - tallest slide at sea"]
             },
             {
                 name: "Western Caribbean Adventure",
                 ship: "Norwegian Gem",
                 cruiseLine: "Norwegian Cruise Line",
+                shipClass: "Jewel Class",
+                yearBuilt: 2007,
                 duration: "8 Nights", 
                 embarkation: "Fort Lauderdale",
                 ports: ["Cozumel", "Roatan", "Belize City", "Costa Maya"],
@@ -349,12 +357,18 @@
                 rating: 4.4,
                 cabinTypes: ["Interior", "Ocean View", "Balcony", "Suite"],
                 image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=250&fit=crop",
-                destination: "Caribbean"
+                destination: "Caribbean",
+                activities: ["Bowling Alley", "Rock Climbing Wall", "Mini Golf", "Basketball Court", "Jogging Track", "Fitness Center"],
+                dining: ["Grand Pacific Restaurant", "Garden Cafe", "Cagney's Steakhouse", "La Bistro", "Teppanyaki", "O'Sheehan's Pub"],
+                bars: ["Bliss Lounge", "Maltings Beer & Whiskey Bar", "Magnum's Champagne Bar", "Pool Bar", "Spinnaker Lounge"],
+                highlights: ["The Great Outdoors - outdoor lifestyle deck", "Spice H2O adult-only area", "Gem Theater with Broadway shows"]
             },
             {
                 name: "Greek Islands Odyssey",
                 ship: "Celebrity Apex",
                 cruiseLine: "Celebrity Cruises",
+                shipClass: "Edge Class",
+                yearBuilt: 2020,
                 duration: "10 Nights",
                 embarkation: "Athens",
                 ports: ["Mykonos", "Santorini", "Rhodes", "Crete", "Naples"],
@@ -362,12 +376,18 @@
                 rating: 4.8,
                 cabinTypes: ["Ocean View", "Balcony", "Suite"],
                 image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&h=250&fit=crop",
-                destination: "Mediterranean"
+                destination: "Mediterranean",
+                activities: ["Magic Carpet (cantilevered deck)", "Rooftop Garden", "Resort Deck", "Fitness Center", "Jogging Track", "Basketball Court"],
+                dining: ["Cosmopolitan Restaurant", "Oceanview Cafe", "Fine Cut Steakhouse", "Raw on 5", "Le Petit Chef", "Eden Restaurant"],
+                bars: ["Sunset Bar", "Craft Bar", "Rooftop Garden Grill", "Club Bar", "Martini Bar", "Wine Bar"],
+                highlights: ["Magic Carpet - first cantilevered deck", "Eden - three-story entertainment venue", "Infinite Balconies", "Camp at Sea kids club"]
             },
             {
                 name: "Alaska Glacier Bay",
                 ship: "Grand Princess",
                 cruiseLine: "Princess Cruises",
+                shipClass: "Grand Class",
+                yearBuilt: 1998,
                 duration: "7 Nights",
                 embarkation: "Seattle",
                 ports: ["Juneau", "Skagway", "Ketchikan", "Glacier Bay"],
@@ -375,12 +395,18 @@
                 rating: 4.9,
                 cabinTypes: ["Balcony", "Suite"],
                 image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop",
-                destination: "Alaska"
+                destination: "Alaska",
+                activities: ["Movies Under the Stars", "Putting Green", "Fitness Center", "Jogging Track", "Swimming Pools", "Hot Tubs"],
+                dining: ["International Dining Room", "Horizon Court", "Crown Grill", "Sabatini's Italian", "Sterling Steakhouse", "Cafe Caribe"],
+                bars: ["Crooners Bar", "Wheelhouse Bar", "Skywalkers Nightclub", "Sports Bar", "Wine Bar", "Pool Bar"],
+                highlights: ["Movies Under the Stars big screen", "Sanctuary adult retreat", "ScholarShip@Sea program", "Alaska wildlife viewing decks"]
             },
             {
                 name: "Norwegian Fjords Explorer",
                 ship: "MS Nieuw Amsterdam",
                 cruiseLine: "Holland America",
+                shipClass: "Signature Class",
+                yearBuilt: 2010,
                 duration: "12 Nights",
                 embarkation: "Copenhagen",
                 ports: ["Bergen", "Geiranger", "Flam", "Stavanger", "Oslo"],
@@ -388,12 +414,18 @@
                 rating: 4.7,
                 cabinTypes: ["Ocean View", "Balcony", "Suite"],
                 image: "https://images.unsplash.com/photo-1501436513145-30f24e19fcc4?w=400&h=250&fit=crop",
-                destination: "Northern Europe"
+                destination: "Northern Europe",
+                activities: ["Greenhouse Spa", "Fitness Center", "Jogging Track", "Swimming Pool", "Hot Tubs", "Library"],
+                dining: ["Vista Dining Room", "Lido Market", "Pinnacle Grill", "Canaletto", "Tamarind", "New York Pizza"],
+                bars: ["Mix Bar", "Piano Bar", "Sports Bar", "Crow's Nest", "Explorer's Lounge", "Ocean Bar"],
+                highlights: ["Greenhouse Spa & Salon", "Culinary Arts Center", "Lincoln Center Stage", "BBC Earth Experiences"]
             },
             {
                 name: "Asian Capitals Discovery",
                 ship: "Norwegian Spirit",
                 cruiseLine: "Norwegian Cruise Line",
+                shipClass: "Spirit Class",
+                yearBuilt: 2004,
                 duration: "14 Nights",
                 embarkation: "Singapore",
                 ports: ["Hong Kong", "Shanghai", "Yokohama", "Busan", "Taipei"],
@@ -401,12 +433,18 @@
                 rating: 4.5,
                 cabinTypes: ["Ocean View", "Balcony", "Suite"],
                 image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop",
-                destination: "Asia"
+                destination: "Asia",
+                activities: ["Star Club Casino", "Fitness Center", "Swimming Pools", "Hot Tubs", "Jogging Track", "Basketball Court"],
+                dining: ["Versailles Restaurant", "Garden Cafe", "Ginza Asian Restaurant", "Moderno Churrascaria", "Le Bistro", "Mambo's"],
+                bars: ["Dazzles Lounge", "Bliss Lounge", "Whiskey Bar", "Pool Bar", "Star Bar", "Havana Club"],
+                highlights: ["Star Club Casino", "Dazzles Nightclub", "Mandara Spa", "Kids Crew programs"]
             },
             {
                 name: "Caribbean Quick Getaway",
                 ship: "Carnival Vista",
                 cruiseLine: "Carnival Cruise Line",
+                shipClass: "Vista Class",
+                yearBuilt: 2016,
                 duration: "4 Nights",
                 embarkation: "Port Canaveral",
                 ports: ["Nassau", "Castaway Cay", "Sea Days"],
@@ -414,12 +452,18 @@
                 rating: 4.2,
                 cabinTypes: ["Interior", "Ocean View", "Balcony"],
                 image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=250&fit=crop",
-                destination: "Caribbean"
+                destination: "Caribbean",
+                activities: ["SkyRide aerial bike course", "SkyCourse ropes course", "WaterWorks aqua park", "Mini Golf", "Basketball Court", "Fitness Center"],
+                dining: ["Reflections Restaurant", "Lido Marketplace", "Fahrenheit 555 Steakhouse", "Bonsai Sushi", "Guy's Burger Joint", "BlueIguana Cantina"],
+                bars: ["SkyBar", "RedFrog Rum Bar", "BlueIguana Tequila Bar", "Sports Bar", "Piano Bar", "Alchemy Bar"],
+                highlights: ["SkyRide - first aerial bike course at sea", "IMAX Theater", "WaterWorks aqua park", "Camp Ocean kids club"]
             },
             {
                 name: "Mediterranean Capitals",
                 ship: "Oasis of the Seas",
                 cruiseLine: "Royal Caribbean",
+                shipClass: "Oasis Class",
+                yearBuilt: 2009,
                 duration: "11 Nights",
                 embarkation: "Rome",
                 ports: ["Barcelona", "Marseille", "Monaco", "Florence", "Naples"],
@@ -427,12 +471,18 @@
                 rating: 4.6,
                 cabinTypes: ["Ocean View", "Balcony", "Suite"],
                 image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&h=250&fit=crop",
-                destination: "Mediterranean"
+                destination: "Mediterranean",
+                activities: ["FlowRider Surf Simulator", "Rock Climbing Wall", "Zip Line", "Mini Golf", "Basketball Court", "Ice Skating Rink"],
+                dining: ["Main Dining Room", "Windjammer Cafe", "150 Central Park", "Chops Grille", "Giovanni's Table", "Park Cafe"],
+                bars: ["Rising Tide Bar", "Viking Crown Lounge", "Boleros", "Schooner Bar", "On Air Club", "Vintages"],
+                highlights: ["Central Park neighborhood", "Boardwalk with carousel", "AquaTheater shows", "Rising Tide Bar that moves between decks"]
             },
             {
                 name: "Southern Caribbean Explorer",
                 ship: "Celebrity Edge",
                 cruiseLine: "Celebrity Cruises",
+                shipClass: "Edge Class",
+                yearBuilt: 2018,
                 duration: "9 Nights",
                 embarkation: "Fort Lauderdale",
                 ports: ["Aruba", "Curacao", "Bonaire", "Barbados"],
@@ -440,12 +490,18 @@
                 rating: 4.7,
                 cabinTypes: ["Ocean View", "Balcony", "Suite"],
                 image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=250&fit=crop",
-                destination: "Caribbean"
+                destination: "Caribbean",
+                activities: ["Magic Carpet deck", "Rooftop Garden", "Resort Deck", "Fitness Center", "Jogging Track", "Basketball Court"],
+                dining: ["Cosmopolitan Restaurant", "Oceanview Cafe", "Fine Cut Steakhouse", "Raw on 5", "Eden Restaurant", "Rooftop Garden Grill"],
+                bars: ["Sunset Bar", "Craft Bar", "Eden Bar", "Club Bar", "Martini Bar", "Pool Bar"],
+                highlights: ["Magic Carpet - cantilevered platform", "Eden - multi-level venue", "Infinite Balconies", "The Retreat sundeck"]
             },
             {
                 name: "Alaska Inside Passage",
                 ship: "Carnival Spirit",
                 cruiseLine: "Carnival Cruise Line",
+                shipClass: "Spirit Class",
+                yearBuilt: 2001,
                 duration: "8 Nights",
                 embarkation: "Vancouver",
                 ports: ["Ketchikan", "Juneau", "Skagway", "Icy Strait Point"],
@@ -453,12 +509,18 @@
                 rating: 4.3,
                 cabinTypes: ["Interior", "Ocean View", "Balcony", "Suite"],
                 image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop",
-                destination: "Alaska"
+                destination: "Alaska",
+                activities: ["Spa Carnival", "Fitness Center", "Jogging Track", "Swimming Pools", "Hot Tubs", "Mini Golf"],
+                dining: ["Empire Restaurant", "Lido Restaurant", "David's Steakhouse", "Sushi Bar", "Pizzeria", "Deli"],
+                bars: ["Atrium Bar", "Jazz Club", "Sports Bar", "Piano Bar", "Pool Bar", "Dance Club"],
+                highlights: ["Serenity Adult-Only Retreat", "Carnival WaterWorks", "Camp Carnival kids club", "Alaska wildlife viewing"]
             },
             {
                 name: "Baltic Capitals",
                 ship: "MS Westerdam",
                 cruiseLine: "Holland America",
+                shipClass: "Vista Class",
+                yearBuilt: 2004,
                 duration: "10 Nights",
                 embarkation: "Copenhagen",
                 ports: ["Stockholm", "Helsinki", "St. Petersburg", "Tallinn"],
@@ -466,7 +528,11 @@
                 rating: 4.5,
                 cabinTypes: ["Ocean View", "Balcony", "Suite"],
                 image: "https://images.unsplash.com/photo-1501436513145-30f24e19fcc4?w=400&h=250&fit=crop",
-                destination: "Northern Europe"
+                destination: "Northern Europe",
+                activities: ["Greenhouse Spa", "Fitness Center", "Jogging Track", "Swimming Pool", "Hot Tubs", "Library"],
+                dining: ["Vista Dining Room", "Lido Market", "Pinnacle Grill", "Canaletto", "Tamarind", "Dive-In"],
+                bars: ["Mix Bar", "Piano Bar", "Sports Bar", "Crow's Nest", "Explorer's Lounge", "Ocean Bar"],
+                highlights: ["Greenhouse Spa & Salon", "Culinary Arts Center", "Half Moon Cay private island", "EXC In-Depth Voyages"]
             }
         ];
 
@@ -483,7 +549,7 @@
                             </div>
                         </div>
                         
-                        <div class="space-y-2 mb-4">
+                            <div class="space-y-2 mb-4">
                             <div class="flex items-center text-sm text-gray-600">
                                 <span class="mr-2">🚢</span>
                                 <span>${cruise.cruiseLine} • ${cruise.ship} • ${cruise.duration}</span>
@@ -491,6 +557,10 @@
                             <div class="flex items-center text-sm text-gray-600">
                                 <span class="mr-2">⚓</span>
                                 <span>Embarkation: ${cruise.embarkation}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">📅</span>
+                                <span>${cruise.shipClass} • Built ${cruise.yearBuilt}</span>
                             </div>
                             <div class="flex items-center text-sm text-gray-600">
                                 <span class="mr-2">📍</span>
@@ -588,7 +658,33 @@
         function showItinerary(cruiseName) {
             const cruise = cruiseDatabase.find(c => c.name === cruiseName);
             if (cruise) {
-                alert(`🚢 ${cruise.name} Itinerary:\n\n📍 Embarkation: ${cruise.embarkation}\n🗓️ Duration: ${cruise.duration}\n\nPorts of Call:\n${cruise.ports.map((port, index) => `Day ${index + 2}: ${port}`).join('\n')}\n\n💰 Starting from $${cruise.price} per person\n\n🐢 Book through TurtleTides for the best deals!`);
+                const itineraryDetails = `
+🚢 ${cruise.name} - ${cruise.ship}
+${cruise.cruiseLine} • ${cruise.shipClass} • Built ${cruise.yearBuilt}
+
+📍 Embarkation: ${cruise.embarkation}
+🗓️ Duration: ${cruise.duration}
+
+PORTS OF CALL:
+${cruise.ports.map((port, index) => `Day ${index + 2}: ${port}`).join('\n')}
+
+🎯 ACTIVITIES & FEATURES:
+${cruise.activities.slice(0, 4).join(' • ')}
+
+🍽️ DINING OPTIONS:
+${cruise.dining.slice(0, 4).join(' • ')}
+
+🍹 BARS & LOUNGES:
+${cruise.bars.slice(0, 4).join(' • ')}
+
+✨ SHIP HIGHLIGHTS:
+${cruise.highlights.slice(0, 2).join(' • ')}
+
+💰 Starting from $${cruise.price} per person
+
+🐢 Book through TurtleTides for exclusive deals!
+                `;
+                alert(itineraryDetails);
             }
         }
 
