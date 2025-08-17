@@ -113,6 +113,148 @@
                         
                         <div class="space-y-2 mb-4">
                             <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">📍</span>
+                                <span>Ports: ${cruise.ports.slice(0, 3).join(', ')}${cruise.ports.length > 3 ? ' +' + (cruise.ports.length - 3) + ' more' : ''}</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-xs text-gray-500 mb-1">Ship Highlights:</p>
+                            <div class="text-xs text-gray-600 mb-2">${cruise.highlights.slice(0, 3).join(' • ')}</div>
+                            <p class="text-xs text-gray-500 mb-1">Available Cabin Types:</p>
+                            <div class="flex flex-wrap gap-1">
+                                ${cruise.cabinTypes.map(cabin => 
+                                    `<span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">${cabin}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-sm text-gray-500">Starting from</span>
+                                <div class="text-2xl font-bold text-teal-600">$${cruise.price}</div>
+                                <span class="text-sm text-gray-500">per person</span>
+                            </div>
+                            <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold transition-colors view-itinerary-btn">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function searchCruises() {
+            const destination = document.getElementById('destinationSelect').value;
+            const cruiseLine = document.getElementById('cruiseLineSelect').value;
+            const duration = document.getElementById('durationSelect').value;
+            
+            let results = cruiseDatabase;
+            
+            // Filter by destination
+            if (destination && destination !== 'Any Destination') {
+                results = results.filter(cruise => cruise.destination === destination);
+            }
+            
+            // Filter by cruise line
+            if (cruiseLine && cruiseLine !== 'Any Cruise Line') {
+                results = results.filter(cruise => cruise.cruiseLine === cruiseLine);
+            }
+            
+            // Filter by duration
+            if (duration && duration !== 'Any Duration') {
+                const durationMap = {
+                    '3-5 Nights': [3, 4, 5],
+                    '6-8 Nights': [6, 7, 8], 
+                    '9-12 Nights': [9, 10, 11, 12],
+                    '13+ Nights': [13, 14, 15, 16, 17, 18, 19, 20]
+                };
+                
+                if (durationMap[duration]) {
+                    results = results.filter(cruise => {
+                        const nights = parseInt(cruise.duration.split(' ')[0]);
+                        return durationMap[duration].includes(nights);
+                    });
+                }
+            }
+            
+            // Show results section
+            const searchResultsSection = document.getElementById('searchResults');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultCount = document.getElementById('resultCount');
+            
+            searchResultsSection.classList.remove('hidden');
+            resultCount.textContent = `${results.length} cruise${results.length !== 1 ? 's' : ''} found`;
+            
+            // Populate results
+            resultsContainer.innerHTML = results.map(cruise => createCruiseCard(cruise)).join('');
+            
+            // Scroll to results
+            searchResultsSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // Add event listeners to new buttons
+            addViewItineraryListeners();
+        }
+
+        function addViewItineraryListeners() {
+            const viewButtons = document.querySelectorAll('.view-itinerary-btn');
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const cruiseName = this.closest('.bg-white').querySelector('h4').textContent;
+                    showItinerary(cruiseName);
+                });
+            });
+        }
+
+        function showItinerary(cruiseName) {
+            const cruise = cruiseDatabase.find(c => c.name === cruiseName);
+            if (cruise) {
+                const itineraryDetails = `
+🚢 ${cruise.name}
+${cruise.cruiseLine} • ${cruise.ship}
+${cruise.shipClass} • Built ${cruise.yearBuilt}
+
+📍 Embarkation: ${cruise.embarkation}
+🗓️ Duration: ${cruise.duration}
+
+PORTS OF CALL:
+${cruise.ports.map((port, index) => `Day ${index + 2}: ${port}`).join('\n')}
+
+🎯 ACTIVITIES & FEATURES:
+${cruise.activities.slice(0, 4).join(' • ')}
+
+🍽️ DINING OPTIONS:
+${cruise.dining.slice(0, 4).join(' • ')}
+
+🍹 BARS & LOUNGES:
+${cruise.bars.slice(0, 4).join(' • ')}
+
+✨ SHIP HIGHLIGHTS:
+${cruise.highlights.slice(0, 3).join(' • ')}
+
+💰 Starting from $${cruise.price} per person
+
+🐢 Book through TurtleTides for exclusive deals!
+                `;
+                alert(itineraryDetails);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search button functionality
+            const searchButton = document.querySelector('.gradient-bg button');
+            searchButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchCruises();
+            });
+
+            // Original View Itinerary buttons (featured cruises)
+            addViewItineraryListeners();
+        });
+    </script>
+</body>
+</html> text-gray-600">
                                 <span class="mr-2">🚢</span>
                                 <span>Ocean Majesty • 7 Nights</span>
                             </div>
