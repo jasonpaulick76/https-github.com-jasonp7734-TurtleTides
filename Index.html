@@ -9,9 +9,6 @@
         .gradient-bg {
             background: linear-gradient(135deg, #0891b2 0%, #1e40af 100%);
         }
-        select, input {
-    color: #374151 !important;
-}
         .card-hover {
             transition: transform 0.2s, box-shadow 0.2s;
         }
@@ -312,22 +309,246 @@
         </div>
     </footer>
 
-    <script>
-        // Add some interactivity
-        document.addEventListener('DOMContentLoaded', function() {
-            // Search button functionality
-            const searchButton = document.querySelector('button');
-            searchButton.addEventListener('click', function() {
-                alert('🐢 Searching for your perfect cruise! This is a demo - stay tuned for real search results!');
-            });
+    <!-- Search Results Section (Hidden by default) -->
+    <section id="searchResults" class="py-12 hidden">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Search Results</h3>
+                <span id="resultCount" class="text-gray-600"></span>
+            </div>
+            <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+    </section>
 
-            // View Itinerary buttons
-            const viewButtons = document.querySelectorAll('button:not(:first-of-type)');
+    <script>
+        // Cruise database with real-looking data
+        const cruiseDatabase = [
+            {
+                name: "Caribbean Paradise",
+                ship: "Royal Turtle",
+                duration: "7 Nights",
+                embarkation: "Miami",
+                ports: ["Nassau", "St. Thomas", "St. John", "CocoCay"],
+                price: 749,
+                rating: 4.6,
+                cabinTypes: ["Interior", "Ocean View", "Balcony", "Suite"],
+                image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=250&fit=crop",
+                destination: "Caribbean"
+            },
+            {
+                name: "Western Caribbean Adventure",
+                ship: "Sea Shell Explorer",
+                duration: "8 Nights", 
+                embarkation: "Fort Lauderdale",
+                ports: ["Cozumel", "Roatan", "Belize City", "Costa Maya"],
+                price: 899,
+                rating: 4.4,
+                cabinTypes: ["Interior", "Ocean View", "Balcony", "Suite"],
+                image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=250&fit=crop",
+                destination: "Caribbean"
+            },
+            {
+                name: "Greek Islands Odyssey",
+                ship: "Mediterranean Turtle",
+                duration: "10 Nights",
+                embarkation: "Athens",
+                ports: ["Mykonos", "Santorini", "Rhodes", "Crete", "Naples"],
+                price: 1599,
+                rating: 4.8,
+                cabinTypes: ["Ocean View", "Balcony", "Suite"],
+                image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&h=250&fit=crop",
+                destination: "Mediterranean"
+            },
+            {
+                name: "Alaska Glacier Bay",
+                ship: "Arctic Shell",
+                duration: "7 Nights",
+                embarkation: "Seattle",
+                ports: ["Juneau", "Skagway", "Ketchikan", "Glacier Bay"],
+                price: 1299,
+                rating: 4.9,
+                cabinTypes: ["Balcony", "Suite"],
+                image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop",
+                destination: "Alaska"
+            },
+            {
+                name: "Norwegian Fjords Explorer",
+                ship: "Nordic Turtle",
+                duration: "12 Nights",
+                embarkation: "Copenhagen",
+                ports: ["Bergen", "Geiranger", "Flam", "Stavanger", "Oslo"],
+                price: 1899,
+                rating: 4.7,
+                cabinTypes: ["Ocean View", "Balcony", "Suite"],
+                image: "https://images.unsplash.com/photo-1501436513145-30f24e19fcc4?w=400&h=250&fit=crop",
+                destination: "Northern Europe"
+            },
+            {
+                name: "Asian Capitals Discovery",
+                ship: "Eastern Turtle",
+                duration: "14 Nights",
+                embarkation: "Singapore",
+                ports: ["Hong Kong", "Shanghai", "Yokohama", "Busan", "Taipei"],
+                price: 2199,
+                rating: 4.5,
+                cabinTypes: ["Ocean View", "Balcony", "Suite"],
+                image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop",
+                destination: "Asia"
+            },
+            {
+                name: "Caribbean Quick Getaway",
+                ship: "Speed Turtle",
+                duration: "4 Nights",
+                embarkation: "Port Canaveral",
+                ports: ["Nassau", "Castaway Cay", "Sea Days"],
+                price: 449,
+                rating: 4.2,
+                cabinTypes: ["Interior", "Ocean View", "Balcony"],
+                image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=250&fit=crop",
+                destination: "Caribbean"
+            },
+            {
+                name: "Mediterranean Capitals",
+                ship: "Europa Turtle",
+                duration: "11 Nights",
+                embarkation: "Rome",
+                ports: ["Barcelona", "Marseille", "Monaco", "Florence", "Naples"],
+                price: 1749,
+                rating: 4.6,
+                cabinTypes: ["Ocean View", "Balcony", "Suite"],
+                image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&h=250&fit=crop",
+                destination: "Mediterranean"
+            }
+        ];
+
+        function createCruiseCard(cruise) {
+            return `
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
+                    <img src="${cruise.image}" alt="${cruise.name}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-bold text-gray-800">${cruise.name}</h4>
+                            <div class="flex items-center">
+                                <span class="text-yellow-400">⭐</span>
+                                <span class="text-sm text-gray-600 ml-1">${cruise.rating}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">🚢</span>
+                                <span>${cruise.ship} • ${cruise.duration}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">⚓</span>
+                                <span>Embarkation: ${cruise.embarkation}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">📍</span>
+                                <span>Ports: ${cruise.ports.slice(0, 3).join(', ')}${cruise.ports.length > 3 ? ' +' + (cruise.ports.length - 3) + ' more' : ''}</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-xs text-gray-500 mb-1">Available Cabin Types:</p>
+                            <div class="flex flex-wrap gap-1">
+                                ${cruise.cabinTypes.map(cabin => 
+                                    `<span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">${cabin}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-sm text-gray-500">Starting from</span>
+                                <div class="text-2xl font-bold text-teal-600">$${cruise.price}</div>
+                                <span class="text-sm text-gray-500">per person</span>
+                            </div>
+                            <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold transition-colors view-itinerary-btn">
+                                View Itinerary
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function searchCruises() {
+            const destination = document.querySelector('select').value;
+            const duration = document.querySelectorAll('select')[1].value;
+            
+            let results = cruiseDatabase;
+            
+            // Filter by destination
+            if (destination && destination !== 'Any Destination') {
+                results = results.filter(cruise => cruise.destination === destination);
+            }
+            
+            // Filter by duration
+            if (duration && duration !== 'Any Duration') {
+                const durationMap = {
+                    '3-5 Nights': [3, 4, 5],
+                    '6-8 Nights': [6, 7, 8], 
+                    '9-12 Nights': [9, 10, 11, 12],
+                    '13+ Nights': [13, 14, 15, 16, 17, 18, 19, 20]
+                };
+                
+                if (durationMap[duration]) {
+                    results = results.filter(cruise => {
+                        const nights = parseInt(cruise.duration.split(' ')[0]);
+                        return durationMap[duration].includes(nights);
+                    });
+                }
+            }
+            
+            // Show results section
+            const searchResultsSection = document.getElementById('searchResults');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultCount = document.getElementById('resultCount');
+            
+            searchResultsSection.classList.remove('hidden');
+            resultCount.textContent = `${results.length} cruise${results.length !== 1 ? 's' : ''} found`;
+            
+            // Populate results
+            resultsContainer.innerHTML = results.map(cruise => createCruiseCard(cruise)).join('');
+            
+            // Scroll to results
+            searchResultsSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // Add event listeners to new buttons
+            addViewItineraryListeners();
+        }
+
+        function addViewItineraryListeners() {
+            const viewButtons = document.querySelectorAll('.view-itinerary-btn');
             viewButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    alert('🚢 Cruise details coming soon! This is the TurtleTides demo.');
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const cruiseName = this.closest('.bg-white').querySelector('h4').textContent;
+                    showItinerary(cruiseName);
                 });
             });
+        }
+
+        function showItinerary(cruiseName) {
+            const cruise = cruiseDatabase.find(c => c.name === cruiseName);
+            if (cruise) {
+                alert(`🚢 ${cruise.name} Itinerary:\n\n📍 Embarkation: ${cruise.embarkation}\n🗓️ Duration: ${cruise.duration}\n\nPorts of Call:\n${cruise.ports.map((port, index) => `Day ${index + 2}: ${port}`).join('\n')}\n\n💰 Starting from $${cruise.price} per person\n\n🐢 Book through TurtleTides for the best deals!`);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search button functionality
+            const searchButton = document.querySelector('.gradient-bg button');
+            searchButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchCruises();
+            });
+
+            // Original View Itinerary buttons (featured cruises)
+            addViewItineraryListeners();
         });
     </script>
 </body>
