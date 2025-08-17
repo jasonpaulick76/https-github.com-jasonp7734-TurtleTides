@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turtle Tides - Find Your Perfect Cruise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #0891b2 0%, #1e40af 100%);
+        }
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-50 to-teal-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-teal-100">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">🐢</span>
+                </div>
+                <h1 class="text-2xl font-bold text-teal-800">Turtle Tides</h1>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#" class="text-gray-700 hover:text-teal-600">Find Cruises</a>
+                <a href="#" class="text-gray-700 hover:text-teal-600">Destinations</a>
+                <a href="#" class="text-gray-700 hover:text-teal-600">Ships</a>
+                <a href="#" class="text-gray-700 hover:text-teal-600">Shore Excursions</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Search Section -->
+    <section class="gradient-bg text-white py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-bold mb-2 text-center">Find Your Perfect Voyage</h2>
+            <p class="text-xl mb-8 text-center opacity-90">Discover amazing cruise itineraries and embark on your dream vacation</p>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Destination</label>
+                        <select class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500">
+                            <option>Any Destination</option>
+                            <option>Caribbean</option>
+                            <option>Mediterranean</option>
+                            <option>Alaska</option>
+                            <option>Northern Europe</option>
+                            <option>Asia</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Embarkation Date</label>
+                        <input type="date" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Duration</label>
+                        <select class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500">
+                            <option>Any Duration</option>
+                            <option>3-5 Nights</option>
+                            <option>6-8 Nights</option>
+                            <option>9-12 Nights</option>
+                            <option>13+ Nights</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Guests</label>
+                        <select class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500">
+                            <option>1 Guest</option>
+                            <option>2 Guests</option>
+                            <option>3 Guests</option>
+                            <option>4+ Guests</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center">
+                    <button class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-md font-semibold transition-colors">
+                        🔍 Search Cruises
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Cruises -->
+    <section class="py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center">Featured Voyages</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Cruise Card 1 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
+                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=250&fit=crop" alt="Caribbean Explorer" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-bold text-gray-800">Caribbean Explorer</h4>
+                            <div class="flex items-center">
+                                <span class="text-yellow-400">⭐</span>
+                                <span class="text-sm text-gray-600 ml-1">4.5</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">🚢</span>
+                                <span>Ocean Majesty • 7 Nights</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">⚓</span>
+                                <span>Embarkation: Fort Lauderdale</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">📍</span>
+                                <span>Ports: Cozumel, Jamaica, Grand Cayman</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-xs text-gray-500 mb-1">Available Cabin Types:</p>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Interior</span>
+                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Ocean View</span>
+                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Balcony</span>
+                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Suite</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-sm text-gray-500">Starting from</span>
+                                <div class="text-2xl font-bold text-teal-600">$899</div>
+                                <span class="text-sm text-gray-500">per person</span>
+                            </div>
+                            <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold transition-colors">
+                                View Itinerary
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cruise Card 2 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
+                    <img src="https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&h=250&fit=crop" alt="Mediterranean Voyage" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-bold text-gray-800">Mediterranean Voyage</h4>
+                            <div class="flex items-center">
+                                <span class="text-yellow-400">⭐</span>
+                                <span class="text-sm text-gray-600 ml-1">4.8</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">🚢</span>
+                                <span>Sea Turtle • 10 Nights</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">⚓</span>
+                                <span>Embarkation: Barcelona</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">📍</span>
+                                <span>Ports: Rome, Naples, Santorini</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-xs text-gray-500 mb-1">Available Cabin Types:</p>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Ocean View</span>
+                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Balcony</span>
+                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Suite</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-sm text-gray-500">Starting from</span>
+                                <div class="text-2xl font-bold text-teal-600">$1,299</div>
+                                <span class="text-sm text-gray-500">per person</span>
+                            </div>
+                            <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold transition-colors">
+                                View Itinerary
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cruise Card 3 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop" alt="Alaska Wilderness" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-bold text-gray-800">Alaska Wilderness</h4>
+                            <div class="flex items-center">
+                                <span class="text-yellow-400">⭐</span>
+                                <span class="text-sm text-gray-600 ml-1">4.9</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">🚢</span>
+                                <span>Northern Shell • 14 Nights</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">⚓</span>
+                                <span>Embarkation: Seattle</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">📍</span>
+                                <span>Ports: Juneau, Ketchikan, Skagway</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-xs text-gray-500 mb-1">Available Cabin Types:</p>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Balcony</span>
+                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Suite</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-sm text-gray-500">Starting from</span>
+                                <div class="text-2xl font-bold text-teal-600">$1,899</div>
+                                <span class="text-sm text-gray-500">per person</span>
+                            </div>
+                            <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold transition-colors">
+                                View Itinerary
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cruise Terms Guide -->
+    <section class="bg-white py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center">Cruise Terms Guide</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-teal-50 p-6 rounded-lg">
+                    <h4 class="font-bold text-teal-800 mb-3">Ship Navigation</h4>
+                    <div class="space-y-2 text-sm">
+                        <p><strong>Bow:</strong> Front of the ship</p>
+                        <p><strong>Stern:</strong> Back of the ship</p>
+                        <p><strong>Port:</strong> Left side (facing forward)</p>
+                        <p><strong>Starboard:</strong> Right side (facing forward)</p>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 p-6 rounded-lg">
+                    <h4 class="font-bold text-blue-800 mb-3">Cabin Categories</h4>
+                    <div class="space-y-2 text-sm">
+                        <p><strong>Interior:</strong> No windows, most affordable</p>
+                        <p><strong>Ocean View:</strong> Window or porthole</p>
+                        <p><strong>Balcony:</strong> Private balcony access</p>
+                        <p><strong>Suite:</strong> Spacious with living areas</p>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 p-6 rounded-lg">
+                    <h4 class="font-bold text-green-800 mb-3">Cruise Experience</h4>
+                    <div class="space-y-2 text-sm">
+                        <p><strong>Shore Excursion:</strong> Organized port tours</p>
+                        <p><strong>Sea Day:</strong> Day at sea, no port stops</p>
+                        <p><strong>Tender:</strong> Boat to shore when can't dock</p>
+                        <p><strong>Lido Deck:</strong> Main pool and activity area</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex items-center justify-center space-x-3 mb-6">
+                <div class="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold">🐢</span>
+                </div>
+                <h2 class="text-2xl font-bold">Turtle Tides</h2>
+            </div>
+            <p class="text-center text-gray-400">
+                Slow and steady wins the race to your perfect cruise vacation.
+            </p>
+            <div class="flex justify-center space-x-6 mt-6">
+                <a href="#" class="text-gray-400 hover:text-white">About</a>
+                <a href="#" class="text-gray-400 hover:text-white">Contact</a>
+                <a href="#" class="text-gray-400 hover:text-white">Terms</a>
+                <a href="#" class="text-gray-400 hover:text-white">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search button functionality
+            const searchButton = document.querySelector('button');
+            searchButton.addEventListener('click', function() {
+                alert('🐢 Searching for your perfect cruise! This is a demo - stay tuned for real search results!');
+            });
+
+            // View Itinerary buttons
+            const viewButtons = document.querySelectorAll('button:not(:first-of-type)');
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('🚢 Cruise details coming soon! This is the TurtleTides demo.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
