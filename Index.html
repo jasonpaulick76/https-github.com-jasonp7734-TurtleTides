@@ -323,11 +323,12 @@
     </section>
 
     <script>
-        // Cruise database with real-looking data
+        // Cruise database with real cruise lines
         const cruiseDatabase = [
             {
                 name: "Caribbean Paradise",
-                ship: "Royal Turtle",
+                ship: "Symphony of the Seas",
+                cruiseLine: "Royal Caribbean",
                 duration: "7 Nights",
                 embarkation: "Miami",
                 ports: ["Nassau", "St. Thomas", "St. John", "CocoCay"],
@@ -339,7 +340,8 @@
             },
             {
                 name: "Western Caribbean Adventure",
-                ship: "Sea Shell Explorer",
+                ship: "Norwegian Gem",
+                cruiseLine: "Norwegian Cruise Line",
                 duration: "8 Nights", 
                 embarkation: "Fort Lauderdale",
                 ports: ["Cozumel", "Roatan", "Belize City", "Costa Maya"],
@@ -351,7 +353,8 @@
             },
             {
                 name: "Greek Islands Odyssey",
-                ship: "Mediterranean Turtle",
+                ship: "Celebrity Apex",
+                cruiseLine: "Celebrity Cruises",
                 duration: "10 Nights",
                 embarkation: "Athens",
                 ports: ["Mykonos", "Santorini", "Rhodes", "Crete", "Naples"],
@@ -363,7 +366,8 @@
             },
             {
                 name: "Alaska Glacier Bay",
-                ship: "Arctic Shell",
+                ship: "Grand Princess",
+                cruiseLine: "Princess Cruises",
                 duration: "7 Nights",
                 embarkation: "Seattle",
                 ports: ["Juneau", "Skagway", "Ketchikan", "Glacier Bay"],
@@ -375,7 +379,8 @@
             },
             {
                 name: "Norwegian Fjords Explorer",
-                ship: "Nordic Turtle",
+                ship: "MS Nieuw Amsterdam",
+                cruiseLine: "Holland America",
                 duration: "12 Nights",
                 embarkation: "Copenhagen",
                 ports: ["Bergen", "Geiranger", "Flam", "Stavanger", "Oslo"],
@@ -387,7 +392,8 @@
             },
             {
                 name: "Asian Capitals Discovery",
-                ship: "Eastern Turtle",
+                ship: "Norwegian Spirit",
+                cruiseLine: "Norwegian Cruise Line",
                 duration: "14 Nights",
                 embarkation: "Singapore",
                 ports: ["Hong Kong", "Shanghai", "Yokohama", "Busan", "Taipei"],
@@ -399,7 +405,8 @@
             },
             {
                 name: "Caribbean Quick Getaway",
-                ship: "Speed Turtle",
+                ship: "Carnival Vista",
+                cruiseLine: "Carnival Cruise Line",
                 duration: "4 Nights",
                 embarkation: "Port Canaveral",
                 ports: ["Nassau", "Castaway Cay", "Sea Days"],
@@ -411,7 +418,8 @@
             },
             {
                 name: "Mediterranean Capitals",
-                ship: "Europa Turtle",
+                ship: "Oasis of the Seas",
+                cruiseLine: "Royal Caribbean",
                 duration: "11 Nights",
                 embarkation: "Rome",
                 ports: ["Barcelona", "Marseille", "Monaco", "Florence", "Naples"],
@@ -420,6 +428,45 @@
                 cabinTypes: ["Ocean View", "Balcony", "Suite"],
                 image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&h=250&fit=crop",
                 destination: "Mediterranean"
+            },
+            {
+                name: "Southern Caribbean Explorer",
+                ship: "Celebrity Edge",
+                cruiseLine: "Celebrity Cruises",
+                duration: "9 Nights",
+                embarkation: "Fort Lauderdale",
+                ports: ["Aruba", "Curacao", "Bonaire", "Barbados"],
+                price: 1199,
+                rating: 4.7,
+                cabinTypes: ["Ocean View", "Balcony", "Suite"],
+                image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=250&fit=crop",
+                destination: "Caribbean"
+            },
+            {
+                name: "Alaska Inside Passage",
+                ship: "Carnival Spirit",
+                cruiseLine: "Carnival Cruise Line",
+                duration: "8 Nights",
+                embarkation: "Vancouver",
+                ports: ["Ketchikan", "Juneau", "Skagway", "Icy Strait Point"],
+                price: 999,
+                rating: 4.3,
+                cabinTypes: ["Interior", "Ocean View", "Balcony", "Suite"],
+                image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop",
+                destination: "Alaska"
+            },
+            {
+                name: "Baltic Capitals",
+                ship: "MS Westerdam",
+                cruiseLine: "Holland America",
+                duration: "10 Nights",
+                embarkation: "Copenhagen",
+                ports: ["Stockholm", "Helsinki", "St. Petersburg", "Tallinn"],
+                price: 1649,
+                rating: 4.5,
+                cabinTypes: ["Ocean View", "Balcony", "Suite"],
+                image: "https://images.unsplash.com/photo-1501436513145-30f24e19fcc4?w=400&h=250&fit=crop",
+                destination: "Northern Europe"
             }
         ];
 
@@ -439,7 +486,7 @@
                         <div class="space-y-2 mb-4">
                             <div class="flex items-center text-sm text-gray-600">
                                 <span class="mr-2">🚢</span>
-                                <span>${cruise.ship} • ${cruise.duration}</span>
+                                <span>${cruise.cruiseLine} • ${cruise.ship} • ${cruise.duration}</span>
                             </div>
                             <div class="flex items-center text-sm text-gray-600">
                                 <span class="mr-2">⚓</span>
@@ -476,14 +523,20 @@
         }
 
         function searchCruises() {
-            const destination = document.querySelector('select').value;
-            const duration = document.querySelectorAll('select')[1].value;
+            const destination = document.getElementById('destinationSelect').value;
+            const cruiseLine = document.getElementById('cruiseLineSelect').value;
+            const duration = document.getElementById('durationSelect').value;
             
             let results = cruiseDatabase;
             
             // Filter by destination
             if (destination && destination !== 'Any Destination') {
                 results = results.filter(cruise => cruise.destination === destination);
+            }
+            
+            // Filter by cruise line
+            if (cruiseLine && cruiseLine !== 'Any Cruise Line') {
+                results = results.filter(cruise => cruise.cruiseLine === cruiseLine);
             }
             
             // Filter by duration
