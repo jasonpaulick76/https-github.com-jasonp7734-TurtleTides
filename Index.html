@@ -3,212 +3,992 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turtle Tides - Find Your Perfect Cruise</title>
+    <title>Turtle Tides - Your Complete Cruise Companion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #0891b2 0%, #1e40af 100%);
-        }
-        .card-hover {
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .tab-active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .popular-badge { background: linear-gradient(45deg, #ff6b6b, #ee5a52); }
+        .trending-badge { background: linear-gradient(45deg, #4ecdc4, #44a08d); }
+        .luxury-badge { background: linear-gradient(45deg, #ffd700, #ffb347); }
+        .hidden { display: none !important; }
+        .modal { backdrop-filter: blur(5px); }
+        .cruise-comparison { max-height: 70vh; overflow-y: auto; }
+        .price-trend { background: linear-gradient(90deg, #e3f2fd, #f3e5f5); }
     </style>
 </head>
-<body class="bg-gradient-to-b from-blue-50 to-teal-50">
+<body class="bg-gray-50 min-h-screen">
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-teal-100">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <nav class="gradient-bg text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
-                    <span class="text-white font-bold text-lg">🐢</span>
-                </div>
-                <h1 class="text-2xl font-bold text-teal-800">Turtle Tides</h1>
+                <span class="text-3xl">🐢</span>
+                <h1 class="text-2xl font-bold">Turtle Tides</h1>
             </div>
-            <nav class="hidden md:flex space-x-6">
-                <a href="#" class="text-gray-700 hover:text-teal-600">Find Cruises</a>
-                <a href="#" class="text-gray-700 hover:text-teal-600">Destinations</a>
-                <a href="#" class="text-gray-700 hover:text-teal-600">Ships</a>
-                <a href="#" class="text-gray-700 hover:text-teal-600">Shore Excursions</a>
+            <div class="flex items-center space-x-6">
+                <button onclick="showUserMenu()" class="flex items-center space-x-2 hover:bg-white hover:bg-opacity-20 px-3 py-1 rounded-lg transition">
+                    <span>👤</span>
+                    <span>My Account</span>
+                </button>
+                <button onclick="showComparisonTool()" class="flex items-center space-x-2 hover:bg-white hover:bg-opacity-20 px-3 py-1 rounded-lg transition">
+                    <span>⚖️</span>
+                    <span id="compareCount">Compare (0)</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-white shadow-sm border-b">
+        <div class="container mx-auto">
+            <nav class="flex space-x-0">
+                <button onclick="showTab('search')" id="tab-search" class="tab-active px-6 py-3 font-medium transition border-b-2 border-transparent">🔍 Search Cruises</button>
+                <button onclick="showTab('popular')" id="tab-popular" class="px-6 py-3 font-medium transition border-b-2 border-transparent hover:bg-gray-50">🏆 Popular Dashboard</button>
+                <button onclick="showTab('calendar')" id="tab-calendar" class="px-6 py-3 font-medium transition border-b-2 border-transparent hover:bg-gray-50">📅 Sailing Calendar</button>
+                <button onclick="showTab('excursions')" id="tab-excursions" class="px-6 py-3 font-medium transition border-b-2 border-transparent hover:bg-gray-50">🏝️ Shore Excursions</button>
+                <button onclick="showTab('reviews')" id="tab-reviews" class="px-6 py-3 font-medium transition border-b-2 border-transparent hover:bg-gray-50">⭐ Reviews</button>
             </nav>
         </div>
-    </header>
+    </div>
 
-    <!-- Hero Search Section -->
-    <section class="gradient-bg text-white py-12">
-        <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-4xl font-bold mb-2 text-center">Find Your Perfect Voyage</h2>
-            <p class="text-xl mb-8 text-center opacity-90">Discover amazing cruise itineraries and embark on your dream vacation</p>
-            
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+    <div class="container mx-auto p-6">
+        <!-- Search Tab -->
+        <div id="search-tab" class="tab-content">
+            <!-- Enhanced Search Form -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Find Your Perfect Cruise</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Destination</label>
-                        <select class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500">
-                            <option>Any Destination</option>
-                            <option>Caribbean</option>
-                            <option>Mediterranean</option>
-                            <option>Alaska</option>
-                            <option>Northern Europe</option>
-                            <option>Asia</option>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Destination</label>
+                        <select id="destinationSelect" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500">
+                            <option value="">Any Destination</option>
+                            <option value="Caribbean">Caribbean</option>
+                            <option value="Mediterranean">Mediterranean</option>
+                            <option value="Alaska">Alaska</option>
+                            <option value="Northern Europe">Northern Europe</option>
+                            <option value="Asia">Asia</option>
+                            <option value="Transatlantic">Transatlantic</option>
+                            <option value="Hawaii">Hawaii</option>
                         </select>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Embarkation Date</label>
-                        <input type="date" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Duration</label>
-                        <select class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500">
-                            <option>Any Duration</option>
-                            <option>3-5 Nights</option>
-                            <option>6-8 Nights</option>
-                            <option>9-12 Nights</option>
-                            <option>13+ Nights</option>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Cruise Line</label>
+                        <select id="cruiseLineSelect" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500">
+                            <option value="">Any Cruise Line</option>
+                            <option value="Royal Caribbean">Royal Caribbean</option>
+                            <option value="Norwegian Cruise Line">Norwegian Cruise Line</option>
+                            <option value="Carnival Cruise Line">Carnival Cruise Line</option>
+                            <option value="Princess Cruises">Princess Cruises</option>
+                            <option value="Celebrity Cruises">Celebrity Cruises</option>
+                            <option value="Holland America">Holland America</option>
+                            <option value="Disney Cruise Line">Disney Cruise Line</option>
+                            <option value="Virgin Voyages">Virgin Voyages</option>
+                            <option value="MSC Cruises">MSC Cruises</option>
+                            <option value="Regent Seven Seas">Regent Seven Seas</option>
+                            <option value="Viking Ocean">Viking Ocean</option>
+                            <option value="Seabourn">Seabourn</option>
                         </select>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Guests</label>
-                        <select class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500">
-                            <option>1 Guest</option>
-                            <option>2 Guests</option>
-                            <option>3 Guests</option>
-                            <option>4+ Guests</option>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                        <select id="durationSelect" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500">
+                            <option value="">Any Duration</option>
+                            <option value="3-5 Nights">3-5 Nights</option>
+                            <option value="6-8 Nights">6-8 Nights</option>
+                            <option value="9-12 Nights">9-12 Nights</option>
+                            <option value="13+ Nights">13+ Nights</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Departure Month</label>
+                        <select id="monthSelect" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500">
+                            <option value="">Any Month</option>
+                            <option value="January">January 2026</option>
+                            <option value="February">February 2026</option>
+                            <option value="March">March 2026</option>
+                            <option value="April">April 2026</option>
+                            <option value="May">May 2026</option>
+                            <option value="June">June 2026</option>
+                            <option value="July">July 2026</option>
+                            <option value="August">August 2026</option>
+                            <option value="September">September 2026</option>
+                            <option value="October">October 2026</option>
+                            <option value="November">November 2026</option>
+                            <option value="December">December 2026</option>
                         </select>
                     </div>
                 </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
+                        <div class="flex space-x-2">
+                            <input type="number" id="minPrice" placeholder="Min $" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500">
+                            <input type="number" id="maxPrice" placeholder="Max $" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Cabin Type</label>
+                        <select id="cabinTypeSelect" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500">
+                            <option value="">Any Cabin Type</option>
+                            <option value="Interior">Interior</option>
+                            <option value="Oceanview">Oceanview</option>
+                            <option value="Balcony">Balcony</option>
+                            <option value="Suite">Suite</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Ship Size</label>
+                        <select id="shipSizeSelect" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500">
+                            <option value="">Any Size</option>
+                            <option value="Small">Small (under 1,000 guests)</option>
+                            <option value="Medium">Medium (1,000-3,000 guests)</option>
+                            <option value="Large">Large (3,000+ guests)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="searchCruises()" class="w-full gradient-bg text-white py-3 px-6 rounded-lg font-medium hover:opacity-90 transition">
+                    🔍 Search Cruises
+                </button>
+            </div>
+
+            <!-- Search Results -->
+            <div id="searchResults" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="resultCount" class="text-xl font-bold text-gray-800"></h3>
+                    <div class="flex space-x-2">
+                        <button onclick="sortResults('price')" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">Sort by Price</button>
+                        <button onclick="sortResults('rating')" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">Sort by Rating</button>
+                        <button onclick="sortResults('duration')" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">Sort by Duration</button>
+                    </div>
+                </div>
+                <div id="resultsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </div>
+
+        <!-- Popular Dashboard Tab -->
+        <div id="popular-tab" class="tab-content hidden">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">🏆 Popular Cruise Lines & Itineraries</h2>
                 
-                <div class="flex justify-center">
-                    <button class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-md font-semibold transition-colors">
-                        🔍 Search Cruises
-                    </button>
+                <!-- Popular Cruise Lines -->
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Most Popular Cruise Lines</h3>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="popularCruiseLines"></div>
+                </div>
+
+                <!-- Trending Destinations -->
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Trending Destinations</h3>
+                    <div class="grid md:grid-cols-3 lg:grid-cols-6 gap-4" id="trendingDestinations"></div>
+                </div>
+
+                <!-- Popular Itineraries -->
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Most Booked Itineraries</h3>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="popularItineraries"></div>
+                </div>
+
+                <!-- Price Trends -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Price Trends & Best Deals</h3>
+                    <div id="priceTrends" class="space-y-4"></div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Featured Cruises -->
-    <section class="py-12">
-        <div class="max-w-6xl mx-auto px-4">
-            <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center">Featured Voyages</h3>
+        <!-- Calendar Tab -->
+        <div id="calendar-tab" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">📅 Sailing Calendar</h2>
+                <div id="sailingCalendar" class="grid grid-cols-7 gap-2"></div>
+            </div>
+        </div>
+
+        <!-- Shore Excursions Tab -->
+        <div id="excursions-tab" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">🏝️ Shore Excursions</h2>
+                <div id="excursionsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div id="reviews-tab" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">⭐ Cruise Reviews & Ratings</h2>
+                <div id="reviewsContainer" class="space-y-6"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Tool Modal -->
+    <div id="comparisonModal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-6xl w-full mx-4 max-h-90vh">
+            <div class="flex justify-between items-center p-6 border-b">
+                <h3 class="text-2xl font-bold text-gray-800">⚖️ Compare Cruises</h3>
+                <button onclick="hideComparisonTool()" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            <div id="comparisonContent" class="cruise-comparison p-6"></div>
+        </div>
+    </div>
+
+    <!-- User Menu Modal -->
+    <div id="userMenuModal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="flex justify-between items-center p-6 border-b">
+                <h3 class="text-2xl font-bold text-gray-800">👤 My Account</h3>
+                <button onclick="hideUserMenu()" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg">💖 My Favorites</button>
+                <button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg">📋 My Bookings</button>
+                <button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg">🔔 Price Alerts</button>
+                <button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg">📊 My Reviews</button>
+                <button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg">⚙️ Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced cruise database with more cruise lines and features
+        const enhancedCruiseDatabase = [
+            {
+                id: 1,
+                name: "Symphony of the Seas",
+                cruiseLine: "Royal Caribbean",
+                ship: "Symphony of the Seas",
+                shipClass: "Oasis Class",
+                yearBuilt: 2018,
+                destination: "Caribbean",
+                embarkation: "Miami, FL",
+                duration: "7 Nights",
+                ports: ["Cozumel, Mexico", "Roatan, Honduras", "Costa Maya, Mexico"],
+                activities: ["FlowRider Surfing", "Rock Climbing", "Ice Skating", "Zip Line", "Aqua Theater Shows"],
+                dining: ["Main Dining Room", "Windjammer Buffet", "Specialty Restaurants", "Room Service"],
+                bars: ["Schooner Bar", "Casino Bar", "Pool Bar", "Wine Bar"],
+                highlights: ["Largest cruise ship", "Central Park", "Boardwalk", "Ultimate Abyss Slide"],
+                cabinTypes: ["Interior ($699)", "Oceanview ($899)", "Balcony ($1,299)", "Suite ($2,499)"],
+                price: 699,
+                rating: 4.5,
+                popularity: 95,
+                capacity: 6780,
+                size: "Large",
+                month: "March"
+            },
+            {
+                id: 2,
+                name: "Norwegian Bliss",
+                cruiseLine: "Norwegian Cruise Line",
+                ship: "Norwegian Bliss",
+                shipClass: "Breakaway Plus Class",
+                yearBuilt: 2018,
+                destination: "Alaska",
+                embarkation: "Seattle, WA",
+                duration: "7 Nights",
+                ports: ["Ketchikan", "Juneau", "Skagway", "Icy Strait Point"],
+                activities: ["Go-Kart Track", "Laser Tag", "Escape Room", "Water Slides"],
+                dining: ["The Haven Restaurant", "Cagney's Steakhouse", "Le Bistro", "Los Lobos"],
+                bars: ["Sugarcane Mojito Bar", "The District Brew House", "Skyy Vodka Ice Bar"],
+                highlights: ["Go-Kart Racing Track", "Observation Lounge", "The Bliss Ultra Lounge"],
+                cabinTypes: ["Interior ($899)", "Oceanview ($1,199)", "Balcony ($1,599)", "Suite ($3,299)"],
+                price: 899,
+                rating: 4.3,
+                popularity: 88,
+                capacity: 4004,
+                size: "Large",
+                month: "May"
+            },
+            {
+                id: 3,
+                name: "Celebrity Edge",
+                cruiseLine: "Celebrity Cruises",
+                ship: "Celebrity Edge",
+                shipClass: "Edge Class",
+                yearBuilt: 2018,
+                destination: "Mediterranean",
+                embarkation: "Barcelona, Spain",
+                duration: "10 Nights",
+                ports: ["Rome (Civitavecchia)", "Naples", "Palma, Mallorca", "Marseille"],
+                activities: ["Magic Carpet", "Eden Restaurant", "Rooftop Garden"],
+                dining: ["Cosmopolitan Restaurant", "Tuscan Grille", "Sushi on Five"],
+                bars: ["The Retreat Sundeck", "Sunset Bar", "Martini Bar"],
+                highlights: ["Magic Carpet Platform", "Infinite Veranda Staterooms", "The Theatre"],
+                cabinTypes: ["Interior ($1,299)", "Oceanview ($1,599)", "Balcony ($1,999)", "Suite ($4,499)"],
+                price: 1299,
+                rating: 4.6,
+                popularity: 92,
+                capacity: 2918,
+                size: "Large",
+                month: "June"
+            },
+            {
+                id: 4,
+                name: "Disney Fantasy",
+                cruiseLine: "Disney Cruise Line",
+                ship: "Disney Fantasy",
+                shipClass: "Dream Class",
+                yearBuilt: 2012,
+                destination: "Caribbean",
+                embarkation: "Port Canaveral, FL",
+                duration: "7 Nights",
+                ports: ["Castaway Cay", "Tortola", "St. Thomas"],
+                activities: ["AquaDuck Water Coaster", "Disney Characters", "Kids' Clubs"],
+                dining: ["Animator's Palate", "Enchanted Garden", "Royal Palace"],
+                bars: ["Skyline Lounge", "Pink Champagne Bar", "Meridian"],
+                highlights: ["AquaDuck", "Bibbidi Bobbidi Boutique", "Disney Theatre"],
+                cabinTypes: ["Interior ($1,499)", "Oceanview ($1,799)", "Balcony ($2,299)", "Suite ($4,999)"],
+                price: 1499,
+                rating: 4.8,
+                popularity: 89,
+                capacity: 4000,
+                size: "Large",
+                month: "April"
+            },
+            {
+                id: 5,
+                name: "Virgin Scarlet Lady",
+                cruiseLine: "Virgin Voyages",
+                ship: "Scarlet Lady",
+                shipClass: "Lady Class",
+                yearBuilt: 2020,
+                destination: "Caribbean",
+                embarkation: "Miami, FL",
+                duration: "5 Nights",
+                ports: ["Costa Maya, Mexico", "Cozumel, Mexico"],
+                activities: ["The Dock", "Athletic Club", "Redemption Spa"],
+                dining: ["The Test Kitchen", "Pink Agave", "Razzle Dazzle"],
+                bars: ["The Sip", "Draught Haus", "Social Club"],
+                highlights: ["Adults Only", "Tattoo Parlor", "Virgin Records"],
+                cabinTypes: ["Sea Terrace ($899)", "Sea View ($1,199)", "Mega RockStar Suite ($3,499)"],
+                price: 899,
+                rating: 4.4,
+                popularity: 78,
+                capacity: 2770,
+                size: "Medium",
+                month: "February"
+            },
+            {
+                id: 6,
+                name: "MSC Seashore",
+                cruiseLine: "MSC Cruises",
+                ship: "MSC Seashore",
+                shipClass: "Seaside EVO Class",
+                yearBuilt: 2021,
+                destination: "Caribbean",
+                embarkation: "Miami, FL",
+                duration: "7 Nights",
+                ports: ["Ocean Cay MSC Marine Reserve", "Cozumel", "Costa Maya"],
+                activities: ["MSC Aurea Spa", "Jungle Pool", "Sports Complex"],
+                dining: ["Hola! Tacos & Cantina", "Butcher's Cut", "Ocean Cay Fish Market"],
+                bars: ["Sky Bar", "Yacht Club Bar", "Pool Grill"],
+                highlights: ["Ocean Cay Private Island", "Yacht Club", "MSC Aurea Experience"],
+                cabinTypes: ["Interior ($649)", "Oceanview ($849)", "Balcony ($1,149)", "Suite ($2,849)"],
+                price: 649,
+                rating: 4.2,
+                popularity: 85,
+                capacity: 5632,
+                size: "Large",
+                month: "January"
+            },
+            {
+                id: 7,
+                name: "Viking Star",
+                cruiseLine: "Viking Ocean",
+                ship: "Viking Star",
+                shipClass: "Viking Class",
+                yearBuilt: 2015,
+                destination: "Northern Europe",
+                embarkation: "Amsterdam, Netherlands",
+                duration: "15 Nights",
+                ports: ["Bergen, Norway", "Geiranger, Norway", "Copenhagen, Denmark", "Stockholm, Sweden"],
+                activities: ["Nordic Spa", "Infinity Pool", "Library", "Cultural Enrichment"],
+                dining: ["The Restaurant", "World Cafe", "Aquavit Terrace", "Chef's Table"],
+                bars: ["Explorer's Lounge", "Star Bar", "Mamsen's"],
+                highlights: ["Adults Only", "Cultural Immersion", "Destination Focused"],
+                cabinTypes: ["Veranda ($3,999)", "Deluxe Veranda ($4,499)", "Penthouse ($7,999)", "Owner's Suite ($12,999)"],
+                price: 3999,
+                rating: 4.7,
+                popularity: 91,
+                capacity: 930,
+                size: "Small",
+                month: "July"
+            },
+            {
+                id: 8,
+                name: "Regent Navigator",
+                cruiseLine: "Regent Seven Seas",
+                ship: "Seven Seas Navigator",
+                shipClass: "Navigator Class",
+                yearBuilt: 1999,
+                destination: "Mediterranean",
+                embarkation: "Monte Carlo, Monaco",
+                duration: "12 Nights",
+                ports: ["Florence/Pisa", "Rome", "Amalfi/Positano", "Barcelona"],
+                activities: ["Canyon Ranch SpaClub", "Library", "Card Room"],
+                dining: ["Compass Rose", "Chartreuse", "Prime 7", "La Veranda"],
+                bars: ["Navigator Lounge", "Stars Lounge", "Horizon Lounge"],
+                highlights: ["All-Inclusive Luxury", "Butler Service", "Unlimited Shore Excursions"],
+                cabinTypes: ["Deluxe Window Suite ($7,999)", "Penthouse Suite ($12,999)", "Master Suite ($19,999)"],
+                price: 7999,
+                rating: 4.9,
+                popularity: 87,
+                capacity: 490,
+                size: "Small",
+                month: "September"
+            }
+        ];
+
+        // Shore excursions database
+        const shoreExcursions = [
+            {
+                id: 1,
+                port: "Cozumel, Mexico",
+                name: "Chankanaab Beach Adventure",
+                duration: "4 hours",
+                price: 89,
+                description: "Snorkeling, beach time, and cultural show",
+                rating: 4.5,
+                difficulty: "Easy"
+            },
+            {
+                id: 2,
+                port: "Rome (Civitavecchia)",
+                name: "Vatican City & Sistine Chapel",
+                duration: "8 hours",
+                price: 189,
+                description: "Skip-the-line access to Vatican Museums",
+                rating: 4.8,
+                difficulty: "Moderate"
+            },
+            {
+                id: 3,
+                port: "Juneau, Alaska",
+                name: "Mendenhall Glacier & Dog Sledding",
+                duration: "5 hours",
+                price: 299,
+                description: "Helicopter tour and glacier dog sledding",
+                rating: 4.9,
+                difficulty: "Moderate"
+            }
+        ];
+
+        // Reviews database
+        const cruiseReviews = [
+            {
+                id: 1,
+                cruiseId: 1,
+                reviewer: "Sarah M.",
+                rating: 5,
+                date: "March 2025",
+                title: "Amazing Family Vacation!",
+                review: "The Symphony of the Seas exceeded all expectations. The kids loved the water slides and we enjoyed the adult-only areas.",
+                verified: true
+            },
+            {
+                id: 2,
+                cruiseId: 3,
+                reviewer: "John D.",
+                rating: 4,
+                date: "June 2025",
+                title: "Sophisticated Mediterranean Cruise",
+                review: "Celebrity Edge offered a refined experience with excellent dining and service. The Magic Carpet was unique!",
+                verified: true
+            }
+        ];
+
+        // Global variables
+        let comparedCruises = [];
+        let currentResults = [];
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.add('hidden'));
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Cruise Card 1 -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
-                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=250&fit=crop" alt="Caribbean Explorer" class="w-full h-48 object-cover">
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+            
+            // Update tab buttons
+            const tabButtons = document.querySelectorAll('[id^="tab-"]');
+            tabButtons.forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('hover:bg-gray-50');
+            });
+            
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            activeTab.classList.add('tab-active');
+            activeTab.classList.remove('hover:bg-gray-50');
+
+            // Load content based on tab
+            if (tabName === 'popular') loadPopularDashboard();
+            if (tabName === 'calendar') loadSailingCalendar();
+            if (tabName === 'excursions') loadShoreExcursions();
+            if (tabName === 'reviews') loadReviews();
+        }
+
+        // Enhanced search functionality
+        function searchCruises() {
+            const filters = {
+                destination: document.getElementById('destinationSelect').value,
+                cruiseLine: document.getElementById('cruiseLineSelect').value,
+                duration: document.getElementById('durationSelect').value,
+                month: document.getElementById('monthSelect').value,
+                minPrice: parseFloat(document.getElementById('minPrice').value) || 0,
+                maxPrice: parseFloat(document.getElementById('maxPrice').value) || Infinity,
+                cabinType: document.getElementById('cabinTypeSelect').value,
+                shipSize: document.getElementById('shipSizeSelect').value
+            };
+
+            currentResults = enhancedCruiseDatabase.filter(cruise => {
+                // Apply all filters
+                if (filters.destination && cruise.destination !== filters.destination) return false;
+                if (filters.cruiseLine && cruise.cruiseLine !== filters.cruiseLine) return false;
+                if (filters.duration && !checkDuration(cruise.duration, filters.duration)) return false;
+                if (filters.month && cruise.month !== filters.month) return false;
+                if (cruise.price < filters.minPrice || cruise.price > filters.maxPrice) return false;
+                if (filters.cabinType && !cruise.cabinTypes.some(cabin => cabin.includes(filters.cabinType))) return false;
+                if (filters.shipSize && cruise.size !== filters.shipSize) return false;
+                return true;
+            });
+
+            displaySearchResults();
+        }
+
+        function checkDuration(cruiseDuration, filterDuration) {
+            const nights = parseInt(cruiseDuration.split(' ')[0]);
+            const durationMap = {
+                '3-5 Nights': [3, 4, 5],
+                '6-8 Nights': [6, 7, 8],
+                '9-12 Nights': [9, 10, 11, 12],
+                '13+ Nights': [13, 14, 15, 16, 17, 18, 19, 20]
+            };
+            return durationMap[filterDuration] ? durationMap[filterDuration].includes(nights) : true;
+        }
+
+        function displaySearchResults() {
+            const searchResultsSection = document.getElementById('searchResults');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultCount = document.getElementById('resultCount');
+
+            searchResultsSection.classList.remove('hidden');
+            resultCount.textContent = `${currentResults.length} cruise${currentResults.length !== 1 ? 's' : ''} found`;
+
+            resultsContainer.innerHTML = currentResults.map(cruise => createEnhancedCruiseCard(cruise)).join('');
+            searchResultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function createEnhancedCruiseCard(cruise) {
+            const isFavorite = favorites.includes(cruise.id);
+            const isCompared = comparedCruises.some(c => c.id === cruise.id);
+            
+            return `
+                <div class="bg-white rounded-lg shadow-lg card-hover overflow-hidden">
+                    <div class="relative">
+                        <div class="h-48 bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
+                            <span class="text-6xl">🚢</span>
+                        </div>
+                        <div class="absolute top-2 right-2 flex space-x-2">
+                            <button onclick="toggleFavorite(${cruise.id})" class="p-2 bg-white bg-opacity-80 rounded-full hover:bg-opacity-100 transition">
+                                ${isFavorite ? '❤️' : '🤍'}
+                            </button>
+                            <button onclick="toggleComparison(${cruise.id})" class="p-2 bg-white bg-opacity-80 rounded-full hover:bg-opacity-100 transition ${isCompared ? 'bg-purple-500 text-white' : ''}">
+                                ⚖️
+                            </button>
+                        </div>
+                        ${cruise.popularity > 90 ? '<div class="absolute top-2 left-2 popular-badge text-white px-2 py-1 rounded-full text-xs font-bold">🔥 Popular</div>' : ''}
+                    </div>
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-2">
-                            <h4 class="text-xl font-bold text-gray-800">Caribbean Explorer</h4>
-                            <div class="flex items-center">
+                            <h4 class="text-xl font-bold text-gray-800">${cruise.name}</h4>
+                            <div class="flex items-center space-x-1">
                                 <span class="text-yellow-400">⭐</span>
-                                <span class="text-sm text-gray-600 ml-1">4.5</span>
+                                <span class="text-sm font-medium">${cruise.rating}</span>
                             </div>
                         </div>
+                        <p class="text-purple-600 font-medium mb-2">${cruise.cruiseLine}</p>
+                        <p class="text-gray-600 mb-3">${cruise.destination} • ${cruise.duration}</p>
                         
                         <div class="space-y-2 mb-4">
                             <div class="flex items-center text-sm text-gray-600">
                                 <span class="mr-2">📍</span>
-                                <span>Ports: ${cruise.ports.slice(0, 3).join(', ')}${cruise.ports.length > 3 ? ' +' + (cruise.ports.length - 3) + ' more' : ''}</span>
+                                <span>${cruise.ports.slice(0, 2).join(', ')}${cruise.ports.length > 2 ? ` +${cruise.ports.length - 2} more` : ''}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <span class="mr-2">👥</span>
+                                <span>${cruise.capacity.toLocaleString()} guests • ${cruise.size} ship</span>
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <p class="text-xs text-gray-500 mb-1">Ship Highlights:</p>
-                            <div class="text-xs text-gray-600 mb-2">${cruise.highlights.slice(0, 3).join(' • ')}</div>
-                            <p class="text-xs text-gray-500 mb-1">Available Cabin Types:</p>
-                            <div class="flex flex-wrap gap-1">
-                                ${cruise.cabinTypes.map(cabin => 
-                                    `<span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">${cabin}</span>`
-                                ).join('')}
-                            </div>
-                        </div>
-                        
                         <div class="flex justify-between items-center">
                             <div>
                                 <span class="text-sm text-gray-500">Starting from</span>
-                                <div class="text-2xl font-bold text-teal-600">$${cruise.price}</div>
+                                <div class="text-2xl font-bold text-green-600">$${cruise.price}</div>
                                 <span class="text-sm text-gray-500">per person</span>
                             </div>
-                            <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold transition-colors view-itinerary-btn">
-                                View Details
-                            </button>
+                            <div class="space-y-2">
+                                <button onclick="viewItinerary(${cruise.id})" class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-sm">
+                                    View Details
+                                </button>
+                                <button onclick="bookNow(${cruise.id})" class="w-full px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition text-sm">
+                                    Book Now
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        function searchCruises() {
-            const destination = document.getElementById('destinationSelect').value;
-            const cruiseLine = document.getElementById('cruiseLineSelect').value;
-            const duration = document.getElementById('durationSelect').value;
-            
-            let results = cruiseDatabase;
-            
-            // Filter by destination
-            if (destination && destination !== 'Any Destination') {
-                results = results.filter(cruise => cruise.destination === destination);
-            }
-            
-            // Filter by cruise line
-            if (cruiseLine && cruiseLine !== 'Any Cruise Line') {
-                results = results.filter(cruise => cruise.cruiseLine === cruiseLine);
-            }
-            
-            // Filter by duration
-            if (duration && duration !== 'Any Duration') {
-                const durationMap = {
-                    '3-5 Nights': [3, 4, 5],
-                    '6-8 Nights': [6, 7, 8], 
-                    '9-12 Nights': [9, 10, 11, 12],
-                    '13+ Nights': [13, 14, 15, 16, 17, 18, 19, 20]
-                };
-                
-                if (durationMap[duration]) {
-                    results = results.filter(cruise => {
-                        const nights = parseInt(cruise.duration.split(' ')[0]);
-                        return durationMap[duration].includes(nights);
-                    });
+        // Popular Dashboard
+        function loadPopularDashboard() {
+            loadPopularCruiseLines();
+            loadTrendingDestinations();
+            loadPopularItineraries();
+            loadPriceTrends();
+        }
+
+        function loadPopularCruiseLines() {
+            const cruiseLineStats = {};
+            enhancedCruiseDatabase.forEach(cruise => {
+                if (!cruiseLineStats[cruise.cruiseLine]) {
+                    cruiseLineStats[cruise.cruiseLine] = { count: 0, totalRating: 0, totalPopularity: 0 };
                 }
+                cruiseLineStats[cruise.cruiseLine].count++;
+                cruiseLineStats[cruise.cruiseLine].totalRating += cruise.rating;
+                cruiseLineStats[cruise.cruiseLine].totalPopularity += cruise.popularity;
+            });
+
+            const sortedLines = Object.entries(cruiseLineStats)
+                .map(([name, stats]) => ({
+                    name,
+                    avgRating: (stats.totalRating / stats.count).toFixed(1),
+                    avgPopularity: Math.round(stats.totalPopularity / stats.count),
+                    cruiseCount: stats.count
+                }))
+                .sort((a, b) => b.avgPopularity - a.avgPopularity);
+
+            const container = document.getElementById('popularCruiseLines');
+            container.innerHTML = sortedLines.map(line => `
+                <div class="bg-gradient-to-br from-purple-50 to-blue-50 p-4 rounded-lg border hover:shadow-lg transition cursor-pointer" onclick="filterByCruiseLine('${line.name}')">
+                    <div class="text-center">
+                        <div class="text-3xl mb-2">🚢</div>
+                        <h4 class="font-bold text-gray-800 mb-1">${line.name}</h4>
+                        <div class="flex items-center justify-center space-x-2 mb-2">
+                            <span class="text-yellow-400">⭐</span>
+                            <span class="text-sm font-medium">${line.avgRating}</span>
+                        </div>
+                        <div class="text-xs text-gray-600">${line.cruiseCount} cruises</div>
+                        <div class="mt-2 bg-purple-600 text-white text-xs px-2 py-1 rounded-full">
+                            ${line.avgPopularity}% popularity
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadTrendingDestinations() {
+            const destinations = [...new Set(enhancedCruiseDatabase.map(c => c.destination))];
+            const container = document.getElementById('trendingDestinations');
+            
+            container.innerHTML = destinations.map(dest => {
+                const cruiseCount = enhancedCruiseDatabase.filter(c => c.destination === dest).length;
+                const avgPrice = Math.round(enhancedCruiseDatabase.filter(c => c.destination === dest)
+                    .reduce((sum, c) => sum + c.price, 0) / cruiseCount);
+                
+                return `
+                    <div class="trending-badge text-white p-4 rounded-lg text-center cursor-pointer hover:opacity-90 transition" onclick="filterByDestination('${dest}')">
+                        <div class="text-2xl mb-2">${getDestinationEmoji(dest)}</div>
+                        <div class="font-bold text-sm">${dest}</div>
+                        <div class="text-xs mt-1">${cruiseCount} cruises</div>
+                        <div class="text-xs">from $${avgPrice}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getDestinationEmoji(destination) {
+            const emojis = {
+                'Caribbean': '🏝️',
+                'Mediterranean': '🏛️',
+                'Alaska': '🏔️',
+                'Northern Europe': '🏰',
+                'Asia': '🏯',
+                'Transatlantic': '🌊',
+                'Hawaii': '🌺'
+            };
+            return emojis[destination] || '🚢';
+        }
+
+        function loadPopularItineraries() {
+            const popularItineraries = enhancedCruiseDatabase
+                .sort((a, b) => b.popularity - a.popularity)
+                .slice(0, 6);
+
+            const container = document.getElementById('popularItineraries');
+            container.innerHTML = popularItineraries.map(cruise => `
+                <div class="bg-white border rounded-lg p-4 hover:shadow-lg transition cursor-pointer" onclick="viewItinerary(${cruise.id})">
+                    <div class="flex justify-between items-start mb-3">
+                        <h4 class="font-bold text-gray-800">${cruise.name}</h4>
+                        <div class="luxury-badge text-white px-2 py-1 rounded-full text-xs">
+                            #${enhancedCruiseDatabase.indexOf(cruise) + 1} Popular
+                        </div>
+                    </div>
+                    <p class="text-purple-600 font-medium mb-2">${cruise.cruiseLine}</p>
+                    <p class="text-gray-600 mb-3">${cruise.destination} • ${cruise.duration}</p>
+                    <div class="flex justify-between items-center">
+                        <div class="text-green-600 font-bold">$${cruise.price}</div>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-yellow-400">⭐</span>
+                            <span class="text-sm">${cruise.rating}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadPriceTrends() {
+            const destinations = [...new Set(enhancedCruiseDatabase.map(c => c.destination))];
+            const container = document.getElementById('priceTrends');
+            
+            container.innerHTML = destinations.map(dest => {
+                const cruises = enhancedCruiseDatabase.filter(c => c.destination === dest);
+                const avgPrice = Math.round(cruises.reduce((sum, c) => sum + c.price, 0) / cruises.length);
+                const minPrice = Math.min(...cruises.map(c => c.price));
+                const savings = avgPrice - minPrice;
+                
+                return `
+                    <div class="price-trend p-4 rounded-lg border">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-gray-800">${dest}</h4>
+                                <p class="text-gray-600">Average: $${avgPrice} • Best Deal: $${minPrice}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-green-600 font-bold">Save up to $${savings}</div>
+                                <button onclick="filterByDestination('${dest}')" class="text-purple-600 text-sm hover:underline">View Deals</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Sailing Calendar
+        function loadSailingCalendar() {
+            const container = document.getElementById('sailingCalendar');
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            // Create calendar header
+            const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            let calendarHTML = daysOfWeek.map(day => `<div class="text-center font-bold p-2 bg-purple-100">${day}</div>`).join('');
+            
+            // Generate calendar days with cruise departures
+            for (let i = 1; i <= 35; i++) {
+                const hasCruise = Math.random() > 0.7; // Simulate cruise departures
+                const cruiseCount = Math.floor(Math.random() * 5) + 1;
+                
+                calendarHTML += `
+                    <div class="border p-2 min-h-16 ${hasCruise ? 'bg-purple-50 hover:bg-purple-100 cursor-pointer' : 'bg-gray-50'}">
+                        <div class="text-sm font-medium">${i}</div>
+                        ${hasCruise ? `<div class="text-xs text-purple-600">${cruiseCount} departures</div>` : ''}
+                    </div>
+                `;
             }
             
-            // Show results section
-            const searchResultsSection = document.getElementById('searchResults');
-            const resultsContainer = document.getElementById('resultsContainer');
-            const resultCount = document.getElementById('resultCount');
-            
-            searchResultsSection.classList.remove('hidden');
-            resultCount.textContent = `${results.length} cruise${results.length !== 1 ? 's' : ''} found`;
-            
-            // Populate results
-            resultsContainer.innerHTML = results.map(cruise => createCruiseCard(cruise)).join('');
-            
-            // Scroll to results
-            searchResultsSection.scrollIntoView({ behavior: 'smooth' });
-            
-            // Add event listeners to new buttons
-            addViewItineraryListeners();
+            container.innerHTML = calendarHTML;
         }
 
-        function addViewItineraryListeners() {
-            const viewButtons = document.querySelectorAll('.view-itinerary-btn');
-            viewButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const cruiseName = this.closest('.bg-white').querySelector('h4').textContent;
-                    showItinerary(cruiseName);
-                });
-            });
+        // Shore Excursions
+        function loadShoreExcursions() {
+            const container = document.getElementById('excursionsContainer');
+            container.innerHTML = shoreExcursions.map(excursion => `
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                    <div class="flex justify-between items-start mb-3">
+                        <h4 class="font-bold text-gray-800">${excursion.name}</h4>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-yellow-400">⭐</span>
+                            <span class="text-sm">${excursion.rating}</span>
+                        </div>
+                    </div>
+                    <p class="text-purple-600 font-medium mb-2">${excursion.port}</p>
+                    <p class="text-gray-600 mb-3">${excursion.description}</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="text-sm text-gray-500">
+                            <span class="mr-4">⏱️ ${excursion.duration}</span>
+                            <span class="px-2 py-1 bg-${excursion.difficulty === 'Easy' ? 'green' : excursion.difficulty === 'Moderate' ? 'yellow' : 'red'}-100 text-${excursion.difficulty === 'Easy' ? 'green' : excursion.difficulty === 'Moderate' ? 'yellow' : 'red'}-800 rounded-full text-xs">
+                                ${excursion.difficulty}
+                            </span>
+                        </div>
+                        <div class="text-xl font-bold text-green-600">$${excursion.price}</div>
+                    </div>
+                    <button class="w-full gradient-bg text-white py-2 rounded-lg hover:opacity-90 transition">
+                        Book Excursion
+                    </button>
+                </div>
+            `).join('');
         }
 
-        function showItinerary(cruiseName) {
-            const cruise = cruiseDatabase.find(c => c.name === cruiseName);
+        // Reviews
+        function loadReviews() {
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = cruiseReviews.map(review => {
+                const cruise = enhancedCruiseDatabase.find(c => c.id === review.cruiseId);
+                return `
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-bold text-gray-800">${review.title}</h4>
+                                <p class="text-purple-600">${cruise?.name} - ${cruise?.cruiseLine}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex">
+                                    ${'⭐'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+                                </div>
+                                ${review.verified ? '<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">✓ Verified</span>' : ''}
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-3">${review.review}</p>
+                        <div class="flex justify-between items-center text-sm text-gray-500">
+                            <span>By ${review.reviewer}</span>
+                            <span>${review.date}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Utility functions
+        function toggleFavorite(cruiseId) {
+            const index = favorites.indexOf(cruiseId);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(cruiseId);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            
+            // Refresh current view
+            if (currentResults.length > 0) {
+                displaySearchResults();
+            }
+        }
+
+        function toggleComparison(cruiseId) {
+            const cruise = enhancedCruiseDatabase.find(c => c.id === cruiseId);
+            const index = comparedCruises.findIndex(c => c.id === cruiseId);
+            
+            if (index > -1) {
+                comparedCruises.splice(index, 1);
+            } else if (comparedCruises.length < 3) {
+                comparedCruises.push(cruise);
+            } else {
+                alert('You can only compare up to 3 cruises at a time.');
+                return;
+            }
+            
+            updateCompareButton();
+            if (currentResults.length > 0) {
+                displaySearchResults();
+            }
+        }
+
+        function updateCompareButton() {
+            document.getElementById('compareCount').textContent = `Compare (${comparedCruises.length})`;
+        }
+
+        function showComparisonTool() {
+            if (comparedCruises.length === 0) {
+                alert('Please select cruises to compare first.');
+                return;
+            }
+            
+            const modal = document.getElementById('comparisonModal');
+            const content = document.getElementById('comparisonContent');
+            
+            content.innerHTML = `
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left p-3">Feature</th>
+                                ${comparedCruises.map(cruise => `<th class="text-left p-3">${cruise.name}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="p-3 font-medium">Cruise Line</td>
+                                ${comparedCruises.map(cruise => `<td class="p-3">${cruise.cruiseLine}</td>`).join('')}
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 font-medium">Destination</td>
+                                ${comparedCruises.map(cruise => `<td class="p-3">${cruise.destination}</td>`).join('')}
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 font-medium">Duration</td>
+                                ${comparedCruises.map(cruise => `<td class="p-3">${cruise.duration}</td>`).join('')}
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 font-medium">Starting Price</td>
+                                ${comparedCruises.map(cruise => `<td class="p-3 text-green-600 font-bold">$${cruise.price}</td>`).join('')}
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 font-medium">Rating</td>
+                                ${comparedCruises.map(cruise => `<td class="p-3">${'⭐'.repeat(Math.floor(cruise.rating))} ${cruise.rating}</td>`).join('')}
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 font-medium">Capacity</td>
+                                ${comparedCruises.map(cruise => `<td class="p-3">${cruise.capacity.toLocaleString()} guests</td>`).join('')}
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 font-medium">Ship Size</td>
+                                ${comparedCruises.map(cruise => `<td class="p-3">${cruise.size}</td>`).join('')}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-6 flex justify-center space-x-4">
+                    ${comparedCruises.map(cruise => `
+                        <button onclick="bookNow(${cruise.id})" class="gradient-bg text-white px-6 py-2 rounded-lg hover:opacity-90 transition">
+                            Book ${cruise.name}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function hideComparisonTool() {
+            document.getElementById('comparisonModal').classList.add('hidden');
+            document.getElementById('comparisonModal').classList.remove('flex');
+        }
+
+        function showUserMenu() {
+            const modal = document.getElementById('userMenuModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function hideUserMenu() {
+            document.getElementById('userMenuModal').classList.add('hidden');
+            document.getElementById('userMenuModal').classList.remove('flex');
+        }
+
+        function viewItinerary(cruiseId) {
+            const cruise = enhancedCruiseDatabase.find(c => c.id === cruiseId);
             if (cruise) {
                 const itineraryDetails = `
 🚢 ${cruise.name}
@@ -217,6 +997,8 @@ ${cruise.shipClass} • Built ${cruise.yearBuilt}
 
 📍 Embarkation: ${cruise.embarkation}
 🗓️ Duration: ${cruise.duration}
+⭐ Rating: ${cruise.rating}/5
+👥 Capacity: ${cruise.capacity.toLocaleString()} guests
 
 PORTS OF CALL:
 ${cruise.ports.map((port, index) => `Day ${index + 2}: ${port}`).join('\n')}
@@ -233,7 +1015,8 @@ ${cruise.bars.slice(0, 4).join(' • ')}
 ✨ SHIP HIGHLIGHTS:
 ${cruise.highlights.slice(0, 3).join(' • ')}
 
-💰 Starting from $${cruise.price} per person
+💰 CABIN TYPES & PRICING:
+${cruise.cabinTypes.join('\n')}
 
 🐢 Book through TurtleTides for exclusive deals!
                 `;
@@ -241,605 +1024,38 @@ ${cruise.highlights.slice(0, 3).join(' • ')}
             }
         }
 
+        function bookNow(cruiseId) {
+            const cruise = enhancedCruiseDatabase.find(c => c.id === cruiseId);
+            alert(`Booking ${cruise.name}...\n\nYou would be redirected to our secure booking system to complete your reservation.`);
+        }
+
+        function sortResults(criteria) {
+            if (criteria === 'price') {
+                currentResults.sort((a, b) => a.price - b.price);
+            } else if (criteria === 'rating') {
+                currentResults.sort((a, b) => b.rating - a.rating);
+            } else if (criteria === 'duration') {
+                currentResults.sort((a, b) => parseInt(a.duration) - parseInt(b.duration));
+            }
+            displaySearchResults();
+        }
+
+        function filterByCruiseLine(cruiseLine) {
+            document.getElementById('cruiseLineSelect').value = cruiseLine;
+            showTab('search');
+            searchCruises();
+        }
+
+        function filterByDestination(destination) {
+            document.getElementById('destinationSelect').value = destination;
+            showTab('search');
+            searchCruises();
+        }
+
+        // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            // Search button functionality
-            const searchButton = document.querySelector('.gradient-bg button');
-            searchButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                searchCruises();
-            });
-
-            // Original View Itinerary buttons (featured cruises)
-            addViewItineraryListeners();
-        });
-    </script>
-</body>
-</html> text-gray-600">
-                                <span class="mr-2">🚢</span>
-                                <span>Ocean Majesty • 7 Nights</span>
-                            </div>
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">⚓</span>
-                                <span>Embarkation: Fort Lauderdale</span>
-                            </div>
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">📍</span>
-                                <span>Ports: Cozumel, Jamaica, Grand Cayman</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <p class="text-xs text-gray-500 mb-1">Available Cabin Types:</p>
-                            <div class="flex flex-wrap gap-1">
-                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Interior</span>
-                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Ocean View</span>
-                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Balcony</span>
-                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Suite</span>
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-sm text-gray-500">Starting from</span>
-                                <div class="text-2xl font-bold text-teal-600">$899</div>
-                                <span class="text-sm text-gray-500">per person</span>
-                            </div>
-                            <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold transition-colors">
-                                View Itinerary
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Cruise Card 2 -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
-                    <img src="https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&h=250&fit=crop" alt="Mediterranean Voyage" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="text-xl font-bold text-gray-800">Mediterranean Voyage</h4>
-                            <div class="flex items-center">
-                                <span class="text-yellow-400">⭐</span>
-                                <span class="text-sm text-gray-600 ml-1">4.8</span>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">🚢</span>
-                                <span>Sea Turtle • 10 Nights</span>
-                            </div>
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">⚓</span>
-                                <span>Embarkation: Barcelona</span>
-                            </div>
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">📍</span>
-                                <span>Ports: Rome, Naples, Santorini</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <p class="text-xs text-gray-500 mb-1">Available Cabin Types:</p>
-                            <div class="flex flex-wrap gap-1">
-                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Ocean View</span>
-                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Balcony</span>
-                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Suite</span>
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-sm text-gray-500">Starting from</span>
-                                <div class="text-2xl font-bold text-teal-600">$1,299</div>
-                                <span class="text-sm text-gray-500">per person</span>
-                            </div>
-                            <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold transition-colors">
-                                View Itinerary
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Cruise Card 3 -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
-                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop" alt="Alaska Wilderness" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="text-xl font-bold text-gray-800">Alaska Wilderness</h4>
-                            <div class="flex items-center">
-                                <span class="text-yellow-400">⭐</span>
-                                <span class="text-sm text-gray-600 ml-1">4.9</span>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">🚢</span>
-                                <span>Northern Shell • 14 Nights</span>
-                            </div>
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">⚓</span>
-                                <span>Embarkation: Seattle</span>
-                            </div>
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">📍</span>
-                                <span>Ports: Juneau, Ketchikan, Skagway</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <p class="text-xs text-gray-500 mb-1">Available Cabin Types:</p>
-                            <div class="flex flex-wrap gap-1">
-                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Balcony</span>
-                                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">Suite</span>
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-sm text-gray-500">Starting from</span>
-                                <div class="text-2xl font-bold text-teal-600">$1,899</div>
-                                <span class="text-sm text-gray-500">per person</span>
-                            </div>
-                            <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold transition-colors">
-                                View Itinerary
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Cruise Terms Guide -->
-    <section class="bg-white py-12">
-        <div class="max-w-6xl mx-auto px-4">
-            <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center">Cruise Terms Guide</h3>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-teal-50 p-6 rounded-lg">
-                    <h4 class="font-bold text-teal-800 mb-3">Ship Navigation</h4>
-                    <div class="space-y-2 text-sm">
-                        <p><strong>Bow:</strong> Front of the ship</p>
-                        <p><strong>Stern:</strong> Back of the ship</p>
-                        <p><strong>Port:</strong> Left side (facing forward)</p>
-                        <p><strong>Starboard:</strong> Right side (facing forward)</p>
-                    </div>
-                </div>
-
-                <div class="bg-blue-50 p-6 rounded-lg">
-                    <h4 class="font-bold text-blue-800 mb-3">Cabin Categories</h4>
-                    <div class="space-y-2 text-sm">
-                        <p><strong>Interior:</strong> No windows, most affordable</p>
-                        <p><strong>Ocean View:</strong> Window or porthole</p>
-                        <p><strong>Balcony:</strong> Private balcony access</p>
-                        <p><strong>Suite:</strong> Spacious with living areas</p>
-                    </div>
-                </div>
-
-                <div class="bg-green-50 p-6 rounded-lg">
-                    <h4 class="font-bold text-green-800 mb-3">Cruise Experience</h4>
-                    <div class="space-y-2 text-sm">
-                        <p><strong>Shore Excursion:</strong> Organized port tours</p>
-                        <p><strong>Sea Day:</strong> Day at sea, no port stops</p>
-                        <p><strong>Tender:</strong> Boat to shore when can't dock</p>
-                        <p><strong>Lido Deck:</strong> Main pool and activity area</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="flex items-center justify-center space-x-3 mb-6">
-                <div class="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center">
-                    <span class="text-white font-bold">🐢</span>
-                </div>
-                <h2 class="text-2xl font-bold">Turtle Tides</h2>
-            </div>
-            <p class="text-center text-gray-400">
-                Slow and steady wins the race to your perfect cruise vacation.
-            </p>
-            <div class="flex justify-center space-x-6 mt-6">
-                <a href="#" class="text-gray-400 hover:text-white">About</a>
-                <a href="#" class="text-gray-400 hover:text-white">Contact</a>
-                <a href="#" class="text-gray-400 hover:text-white">Terms</a>
-                <a href="#" class="text-gray-400 hover:text-white">Privacy</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Search Results Section (Hidden by default) -->
-    <section id="searchResults" class="py-12 hidden">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-gray-800">Search Results</h3>
-                <span id="resultCount" class="text-gray-600"></span>
-            </div>
-            <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Results will be populated here -->
-            </div>
-        </div>
-    </section>
-
-    <script>
-        // Cruise database with detailed ship information
-        const cruiseDatabase = [
-            {
-                name: "Caribbean Paradise",
-                ship: "Symphony of the Seas",
-                cruiseLine: "Royal Caribbean",
-                shipClass: "Oasis Class",
-                yearBuilt: 2018,
-                duration: "7 Nights",
-                embarkation: "Miami",
-                ports: ["Nassau", "St. Thomas", "St. John", "CocoCay"],
-                price: 749,
-                rating: 4.6,
-                cabinTypes: ["Interior", "Ocean View", "Balcony", "Suite"],
-                image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=250&fit=crop",
-                destination: "Caribbean",
-                activities: ["FlowRider Surf Simulator", "Rock Climbing Wall", "Zip Line", "Mini Golf", "Basketball Court", "Ice Skating Rink"],
-                dining: ["Main Dining Room", "Windjammer Marketplace", "Chops Grille", "Giovanni's Table", "Sushi Bar", "Johnny Rockets"],
-                bars: ["Bionic Bar", "Sky Bar", "Pool Bar", "Schooner Bar", "Diamond Club", "Vintages Wine Bar"],
-                highlights: ["Central Park with 20,000+ plants", "AquaTheater with high-diving shows", "Boardwalk Carousel", "Ultimate Abyss - tallest slide at sea"]
-            },
-            {
-                name: "Western Caribbean Adventure",
-                ship: "Norwegian Gem",
-                cruiseLine: "Norwegian Cruise Line",
-                shipClass: "Jewel Class",
-                yearBuilt: 2007,
-                duration: "8 Nights", 
-                embarkation: "Fort Lauderdale",
-                ports: ["Cozumel", "Roatan", "Belize City", "Costa Maya"],
-                price: 899,
-                rating: 4.4,
-                cabinTypes: ["Interior", "Ocean View", "Balcony", "Suite"],
-                image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=250&fit=crop",
-                destination: "Caribbean",
-                activities: ["Bowling Alley", "Rock Climbing Wall", "Mini Golf", "Basketball Court", "Jogging Track", "Fitness Center"],
-                dining: ["Grand Pacific Restaurant", "Garden Cafe", "Cagney's Steakhouse", "La Bistro", "Teppanyaki", "O'Sheehan's Pub"],
-                bars: ["Bliss Lounge", "Maltings Beer & Whiskey Bar", "Magnum's Champagne Bar", "Pool Bar", "Spinnaker Lounge"],
-                highlights: ["The Great Outdoors - outdoor lifestyle deck", "Spice H2O adult-only area", "Gem Theater with Broadway shows"]
-            },
-            {
-                name: "Greek Islands Odyssey",
-                ship: "Celebrity Apex",
-                cruiseLine: "Celebrity Cruises",
-                shipClass: "Edge Class",
-                yearBuilt: 2020,
-                duration: "10 Nights",
-                embarkation: "Athens",
-                ports: ["Mykonos", "Santorini", "Rhodes", "Crete", "Naples"],
-                price: 1599,
-                rating: 4.8,
-                cabinTypes: ["Ocean View", "Balcony", "Suite"],
-                image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&h=250&fit=crop",
-                destination: "Mediterranean",
-                activities: ["Magic Carpet (cantilevered deck)", "Rooftop Garden", "Resort Deck", "Fitness Center", "Jogging Track", "Basketball Court"],
-                dining: ["Cosmopolitan Restaurant", "Oceanview Cafe", "Fine Cut Steakhouse", "Raw on 5", "Le Petit Chef", "Eden Restaurant"],
-                bars: ["Sunset Bar", "Craft Bar", "Rooftop Garden Grill", "Club Bar", "Martini Bar", "Wine Bar"],
-                highlights: ["Magic Carpet - first cantilevered deck", "Eden - three-story entertainment venue", "Infinite Balconies", "Camp at Sea kids club"]
-            },
-            {
-                name: "Alaska Glacier Bay",
-                ship: "Grand Princess",
-                cruiseLine: "Princess Cruises",
-                shipClass: "Grand Class",
-                yearBuilt: 1998,
-                duration: "7 Nights",
-                embarkation: "Seattle",
-                ports: ["Juneau", "Skagway", "Ketchikan", "Glacier Bay"],
-                price: 1299,
-                rating: 4.9,
-                cabinTypes: ["Balcony", "Suite"],
-                image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop",
-                destination: "Alaska",
-                activities: ["Movies Under the Stars", "Putting Green", "Fitness Center", "Jogging Track", "Swimming Pools", "Hot Tubs"],
-                dining: ["International Dining Room", "Horizon Court", "Crown Grill", "Sabatini's Italian", "Sterling Steakhouse", "Cafe Caribe"],
-                bars: ["Crooners Bar", "Wheelhouse Bar", "Skywalkers Nightclub", "Sports Bar", "Wine Bar", "Pool Bar"],
-                highlights: ["Movies Under the Stars big screen", "Sanctuary adult retreat", "ScholarShip@Sea program", "Alaska wildlife viewing decks"]
-            },
-            {
-                name: "Norwegian Fjords Explorer",
-                ship: "MS Nieuw Amsterdam",
-                cruiseLine: "Holland America",
-                shipClass: "Signature Class",
-                yearBuilt: 2010,
-                duration: "12 Nights",
-                embarkation: "Copenhagen",
-                ports: ["Bergen", "Geiranger", "Flam", "Stavanger", "Oslo"],
-                price: 1899,
-                rating: 4.7,
-                cabinTypes: ["Ocean View", "Balcony", "Suite"],
-                image: "https://images.unsplash.com/photo-1501436513145-30f24e19fcc4?w=400&h=250&fit=crop",
-                destination: "Northern Europe",
-                activities: ["Greenhouse Spa", "Fitness Center", "Jogging Track", "Swimming Pool", "Hot Tubs", "Library"],
-                dining: ["Vista Dining Room", "Lido Market", "Pinnacle Grill", "Canaletto", "Tamarind", "New York Pizza"],
-                bars: ["Mix Bar", "Piano Bar", "Sports Bar", "Crow's Nest", "Explorer's Lounge", "Ocean Bar"],
-                highlights: ["Greenhouse Spa & Salon", "Culinary Arts Center", "Lincoln Center Stage", "BBC Earth Experiences"]
-            },
-            {
-                name: "Asian Capitals Discovery",
-                ship: "Norwegian Spirit",
-                cruiseLine: "Norwegian Cruise Line",
-                shipClass: "Spirit Class",
-                yearBuilt: 2004,
-                duration: "14 Nights",
-                embarkation: "Singapore",
-                ports: ["Hong Kong", "Shanghai", "Yokohama", "Busan", "Taipei"],
-                price: 2199,
-                rating: 4.5,
-                cabinTypes: ["Ocean View", "Balcony", "Suite"],
-                image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop",
-                destination: "Asia",
-                activities: ["Star Club Casino", "Fitness Center", "Swimming Pools", "Hot Tubs", "Jogging Track", "Basketball Court"],
-                dining: ["Versailles Restaurant", "Garden Cafe", "Ginza Asian Restaurant", "Moderno Churrascaria", "Le Bistro", "Mambo's"],
-                bars: ["Dazzles Lounge", "Bliss Lounge", "Whiskey Bar", "Pool Bar", "Star Bar", "Havana Club"],
-                highlights: ["Star Club Casino", "Dazzles Nightclub", "Mandara Spa", "Kids Crew programs"]
-            },
-            {
-                name: "Caribbean Quick Getaway",
-                ship: "Carnival Vista",
-                cruiseLine: "Carnival Cruise Line",
-                shipClass: "Vista Class",
-                yearBuilt: 2016,
-                duration: "4 Nights",
-                embarkation: "Port Canaveral",
-                ports: ["Nassau", "Castaway Cay", "Sea Days"],
-                price: 449,
-                rating: 4.2,
-                cabinTypes: ["Interior", "Ocean View", "Balcony"],
-                image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=250&fit=crop",
-                destination: "Caribbean",
-                activities: ["SkyRide aerial bike course", "SkyCourse ropes course", "WaterWorks aqua park", "Mini Golf", "Basketball Court", "Fitness Center"],
-                dining: ["Reflections Restaurant", "Lido Marketplace", "Fahrenheit 555 Steakhouse", "Bonsai Sushi", "Guy's Burger Joint", "BlueIguana Cantina"],
-                bars: ["SkyBar", "RedFrog Rum Bar", "BlueIguana Tequila Bar", "Sports Bar", "Piano Bar", "Alchemy Bar"],
-                highlights: ["SkyRide - first aerial bike course at sea", "IMAX Theater", "WaterWorks aqua park", "Camp Ocean kids club"]
-            },
-            {
-                name: "Mediterranean Capitals",
-                ship: "Oasis of the Seas",
-                cruiseLine: "Royal Caribbean",
-                shipClass: "Oasis Class",
-                yearBuilt: 2009,
-                duration: "11 Nights",
-                embarkation: "Rome",
-                ports: ["Barcelona", "Marseille", "Monaco", "Florence", "Naples"],
-                price: 1749,
-                rating: 4.6,
-                cabinTypes: ["Ocean View", "Balcony", "Suite"],
-                image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&h=250&fit=crop",
-                destination: "Mediterranean",
-                activities: ["FlowRider Surf Simulator", "Rock Climbing Wall", "Zip Line", "Mini Golf", "Basketball Court", "Ice Skating Rink"],
-                dining: ["Main Dining Room", "Windjammer Cafe", "150 Central Park", "Chops Grille", "Giovanni's Table", "Park Cafe"],
-                bars: ["Rising Tide Bar", "Viking Crown Lounge", "Boleros", "Schooner Bar", "On Air Club", "Vintages"],
-                highlights: ["Central Park neighborhood", "Boardwalk with carousel", "AquaTheater shows", "Rising Tide Bar that moves between decks"]
-            },
-            {
-                name: "Southern Caribbean Explorer",
-                ship: "Celebrity Edge",
-                cruiseLine: "Celebrity Cruises",
-                shipClass: "Edge Class",
-                yearBuilt: 2018,
-                duration: "9 Nights",
-                embarkation: "Fort Lauderdale",
-                ports: ["Aruba", "Curacao", "Bonaire", "Barbados"],
-                price: 1199,
-                rating: 4.7,
-                cabinTypes: ["Ocean View", "Balcony", "Suite"],
-                image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=250&fit=crop",
-                destination: "Caribbean",
-                activities: ["Magic Carpet deck", "Rooftop Garden", "Resort Deck", "Fitness Center", "Jogging Track", "Basketball Court"],
-                dining: ["Cosmopolitan Restaurant", "Oceanview Cafe", "Fine Cut Steakhouse", "Raw on 5", "Eden Restaurant", "Rooftop Garden Grill"],
-                bars: ["Sunset Bar", "Craft Bar", "Eden Bar", "Club Bar", "Martini Bar", "Pool Bar"],
-                highlights: ["Magic Carpet - cantilevered platform", "Eden - multi-level venue", "Infinite Balconies", "The Retreat sundeck"]
-            },
-            {
-                name: "Alaska Inside Passage",
-                ship: "Carnival Spirit",
-                cruiseLine: "Carnival Cruise Line",
-                shipClass: "Spirit Class",
-                yearBuilt: 2001,
-                duration: "8 Nights",
-                embarkation: "Vancouver",
-                ports: ["Ketchikan", "Juneau", "Skagway", "Icy Strait Point"],
-                price: 999,
-                rating: 4.3,
-                cabinTypes: ["Interior", "Ocean View", "Balcony", "Suite"],
-                image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop",
-                destination: "Alaska",
-                activities: ["Spa Carnival", "Fitness Center", "Jogging Track", "Swimming Pools", "Hot Tubs", "Mini Golf"],
-                dining: ["Empire Restaurant", "Lido Restaurant", "David's Steakhouse", "Sushi Bar", "Pizzeria", "Deli"],
-                bars: ["Atrium Bar", "Jazz Club", "Sports Bar", "Piano Bar", "Pool Bar", "Dance Club"],
-                highlights: ["Serenity Adult-Only Retreat", "Carnival WaterWorks", "Camp Carnival kids club", "Alaska wildlife viewing"]
-            },
-            {
-                name: "Baltic Capitals",
-                ship: "MS Westerdam",
-                cruiseLine: "Holland America",
-                shipClass: "Vista Class",
-                yearBuilt: 2004,
-                duration: "10 Nights",
-                embarkation: "Copenhagen",
-                ports: ["Stockholm", "Helsinki", "St. Petersburg", "Tallinn"],
-                price: 1649,
-                rating: 4.5,
-                cabinTypes: ["Ocean View", "Balcony", "Suite"],
-                image: "https://images.unsplash.com/photo-1501436513145-30f24e19fcc4?w=400&h=250&fit=crop",
-                destination: "Northern Europe",
-                activities: ["Greenhouse Spa", "Fitness Center", "Jogging Track", "Swimming Pool", "Hot Tubs", "Library"],
-                dining: ["Vista Dining Room", "Lido Market", "Pinnacle Grill", "Canaletto", "Tamarind", "Dive-In"],
-                bars: ["Mix Bar", "Piano Bar", "Sports Bar", "Crow's Nest", "Explorer's Lounge", "Ocean Bar"],
-                highlights: ["Greenhouse Spa & Salon", "Culinary Arts Center", "Half Moon Cay private island", "EXC In-Depth Voyages"]
-            }
-        ];
-
-        function createCruiseCard(cruise) {
-            return `
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
-                    <img src="${cruise.image}" alt="${cruise.name}" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="text-xl font-bold text-gray-800">${cruise.name}</h4>
-                            <div class="flex items-center">
-                                <span class="text-yellow-400">⭐</span>
-                                <span class="text-sm text-gray-600 ml-1">${cruise.rating}</span>
-                            </div>
-                        </div>
-                        
-                            <div class="space-y-2 mb-4">
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">🚢</span>
-                                <span>${cruise.cruiseLine} • ${cruise.ship} • ${cruise.duration}</span>
-                            </div>
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">⚓</span>
-                                <span>Embarkation: ${cruise.embarkation}</span>
-                            </div>
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">📅</span>
-                                <span>${cruise.shipClass} • Built ${cruise.yearBuilt}</span>
-                            </div>
-                            <div class="flex items-center text-sm text-gray-600">
-                                <span class="mr-2">📍</span>
-                                <span>Ports: ${cruise.ports.slice(0, 3).join(', ')}${cruise.ports.length > 3 ? ' +' + (cruise.ports.length - 3) + ' more' : ''}</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <p class="text-xs text-gray-500 mb-1">Available Cabin Types:</p>
-                            <div class="flex flex-wrap gap-1">
-                                ${cruise.cabinTypes.map(cabin => 
-                                    `<span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">${cabin}</span>`
-                                ).join('')}
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-sm text-gray-500">Starting from</span>
-                                <div class="text-2xl font-bold text-teal-600">$${cruise.price}</div>
-                                <span class="text-sm text-gray-500">per person</span>
-                            </div>
-                            <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold transition-colors view-itinerary-btn">
-                                View Itinerary
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function searchCruises() {
-            const destination = document.getElementById('destinationSelect').value;
-            const cruiseLine = document.getElementById('cruiseLineSelect').value;
-            const duration = document.getElementById('durationSelect').value;
-            
-            let results = cruiseDatabase;
-            
-            // Filter by destination
-            if (destination && destination !== 'Any Destination') {
-                results = results.filter(cruise => cruise.destination === destination);
-            }
-            
-            // Filter by cruise line
-            if (cruiseLine && cruiseLine !== 'Any Cruise Line') {
-                results = results.filter(cruise => cruise.cruiseLine === cruiseLine);
-            }
-            
-            // Filter by duration
-            if (duration && duration !== 'Any Duration') {
-                const durationMap = {
-                    '3-5 Nights': [3, 4, 5],
-                    '6-8 Nights': [6, 7, 8], 
-                    '9-12 Nights': [9, 10, 11, 12],
-                    '13+ Nights': [13, 14, 15, 16, 17, 18, 19, 20]
-                };
-                
-                if (durationMap[duration]) {
-                    results = results.filter(cruise => {
-                        const nights = parseInt(cruise.duration.split(' ')[0]);
-                        return durationMap[duration].includes(nights);
-                    });
-                }
-            }
-            
-            // Show results section
-            const searchResultsSection = document.getElementById('searchResults');
-            const resultsContainer = document.getElementById('resultsContainer');
-            const resultCount = document.getElementById('resultCount');
-            
-            searchResultsSection.classList.remove('hidden');
-            resultCount.textContent = `${results.length} cruise${results.length !== 1 ? 's' : ''} found`;
-            
-            // Populate results
-            resultsContainer.innerHTML = results.map(cruise => createCruiseCard(cruise)).join('');
-            
-            // Scroll to results
-            searchResultsSection.scrollIntoView({ behavior: 'smooth' });
-            
-            // Add event listeners to new buttons
-            addViewItineraryListeners();
-        }
-
-        function addViewItineraryListeners() {
-            const viewButtons = document.querySelectorAll('.view-itinerary-btn');
-            viewButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const cruiseName = this.closest('.bg-white').querySelector('h4').textContent;
-                    showItinerary(cruiseName);
-                });
-            });
-        }
-
-        function showItinerary(cruiseName) {
-            const cruise = cruiseDatabase.find(c => c.name === cruiseName);
-            if (cruise) {
-                const itineraryDetails = `
-🚢 ${cruise.name} - ${cruise.ship}
-${cruise.cruiseLine} • ${cruise.shipClass} • Built ${cruise.yearBuilt}
-
-📍 Embarkation: ${cruise.embarkation}
-🗓️ Duration: ${cruise.duration}
-
-PORTS OF CALL:
-${cruise.ports.map((port, index) => `Day ${index + 2}: ${port}`).join('\n')}
-
-🎯 ACTIVITIES & FEATURES:
-${cruise.activities.slice(0, 4).join(' • ')}
-
-🍽️ DINING OPTIONS:
-${cruise.dining.slice(0, 4).join(' • ')}
-
-🍹 BARS & LOUNGES:
-${cruise.bars.slice(0, 4).join(' • ')}
-
-✨ SHIP HIGHLIGHTS:
-${cruise.highlights.slice(0, 2).join(' • ')}
-
-💰 Starting from $${cruise.price} per person
-
-🐢 Book through TurtleTides for exclusive deals!
-                `;
-                alert(itineraryDetails);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Search button functionality
-            const searchButton = document.querySelector('.gradient-bg button');
-            searchButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                searchCruises();
-            });
-
-            // Original View Itinerary buttons (featured cruises)
-            addViewItineraryListeners();
+            loadPopularDashboard();
+            updateCompareButton();
         });
     </script>
 </body>
